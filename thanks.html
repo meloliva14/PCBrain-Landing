@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PC Brain — You're on the list</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#080b14;color:#e8eaf6;font-family:'Inter',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px}
+.card{max-width:480px}
+.check{width:72px;height:72px;border-radius:50%;border:3px solid #00d4ff;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:32px;color:#00d4ff;animation:pop .4s ease}
+@keyframes pop{0%{transform:scale(0)}60%{transform:scale(1.15)}100%{transform:scale(1)}}
+h1{font-size:32px;font-weight:800;margin-bottom:12px}
+h1 span{color:#00d4ff}
+p{color:#6b7280;font-size:15px;line-height:1.7;margin-bottom:24px}
+a{color:#00d4ff;text-decoration:none;font-weight:600}
+a:hover{text-decoration:underline}
+.btn{display:inline-block;padding:12px 28px;border-radius:999px;background:linear-gradient(135deg,#00d4ff,#0088cc);color:#000;font-weight:700;font-size:14px;text-decoration:none;margin-top:8px}
+.btn:hover{box-shadow:0 0 20px rgba(0,212,255,.4);text-decoration:none}
+.footer{margin-top:32px;font-size:11px;color:#374151}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="check">&#10003;</div>
+  <h1>You're <span>on the list.</span></h1>
+  <p>We review every application personally. If selected, you'll receive your license key and download link at the email you provided.</p>
+  <p style="font-size:13px;color:#4b5563">Expect to hear from <strong style="color:#e8eaf6">melo@pcbrain.ai</strong> within a few days.</p>
+  <a href="https://pcbrain.ai" class="btn">&larr; Back to pcbrain.ai</a>
+  <div class="footer">&copy; 2026 Melchiorre Oliva &middot; pcbrain.ai</div>
+</div>
+</body>
+</html>
