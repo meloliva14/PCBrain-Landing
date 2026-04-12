@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#00d4ff;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#0088cc;stop-opacity:1"/>
+    </linearGradient>
+  </defs>
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#080b14"/>
+  <!-- Stars -->
+  <circle cx="120" cy="80" r="1" fill="rgba(255,255,255,0.4)"/>
+  <circle cx="340" cy="140" r="1.5" fill="rgba(200,220,255,0.5)"/>
+  <circle cx="560" cy="60" r="1" fill="rgba(255,255,255,0.3)"/>
+  <circle cx="780" cy="180" r="1.2" fill="rgba(200,220,255,0.4)"/>
+  <circle cx="950" cy="90" r="1" fill="rgba(255,255,255,0.35)"/>
+  <circle cx="200" cy="300" r="0.8" fill="rgba(255,255,255,0.25)"/>
+  <circle cx="450" cy="400" r="1" fill="rgba(255,255,255,0.3)"/>
+  <circle cx="100" cy="500" r="1.3" fill="rgba(200,220,255,0.4)"/>
+  <circle cx="680" cy="520" r="0.9" fill="rgba(255,255,255,0.2)"/>
+  <circle cx="1050" cy="350" r="1.1" fill="rgba(255,255,255,0.3)"/>
+  <circle cx="1100" cy="500" r="0.8" fill="rgba(200,220,255,0.35)"/>
+  <circle cx="850" cy="400" r="1.4" fill="rgba(180,210,255,0.3)"/>
+  <!-- Left content -->
+  <text x="80" y="240" font-family="monospace" font-size="72" font-weight="700" fill="#00d4ff">PC Brain</text>
+  <text x="80" y="310" font-family="sans-serif" font-size="48" font-weight="800" fill="#e8eaf6">Your AI OS.</text>
+  <text x="80" y="370" font-family="sans-serif" font-size="32" font-weight="600" fill="rgba(0,212,255,0.6)">Locally Governed.</text>
+  <text x="80" y="430" font-family="monospace" font-size="20" fill="#00d4ff">pcbrain.ai</text>
+  <!-- Right: mini dashboard mockup -->
+  <rect x="720" y="160" width="400" height="300" rx="12" fill="#0f1117" stroke="rgba(0,212,255,0.2)" stroke-width="1"/>
+  <!-- Chrome bar -->
+  <rect x="720" y="160" width="400" height="28" rx="12" fill="#1a1d28"/>
+  <rect x="720" y="176" width="400" height="12" fill="#1a1d28"/>
+  <circle cx="736" cy="174" r="4" fill="#ff5f57"/>
+  <circle cx="750" cy="174" r="4" fill="#ffbd2e"/>
+  <circle cx="764" cy="174" r="4" fill="#28c840"/>
+  <!-- Tiles -->
+  <rect x="735" y="200" width="180" height="80" rx="6" fill="rgba(255,255,255,0.03)" stroke="rgba(0,212,255,0.1)" stroke-width="1"/>
+  <rect x="925" y="200" width="180" height="80" rx="6" fill="rgba(255,255,255,0.03)" stroke="rgba(0,212,255,0.1)" stroke-width="1"/>
+  <rect x="735" y="290" width="180" height="80" rx="6" fill="rgba(255,255,255,0.03)" stroke="rgba(0,212,255,0.1)" stroke-width="1"/>
+  <rect x="925" y="290" width="180" height="80" rx="6" fill="rgba(255,255,255,0.03)" stroke="rgba(0,212,255,0.1)" stroke-width="1"/>
+  <!-- Health ring -->
+  <circle cx="785" cy="240" r="22" fill="none" stroke="#00d4ff" stroke-width="3"/>
+  <text x="785" y="246" font-family="monospace" font-size="14" font-weight="800" fill="#00d4ff" text-anchor="middle">100</text>
+  <!-- Status badge -->
+  <rect x="945" y="215" width="50" height="16" rx="8" fill="rgba(0,255,136,0.12)"/>
+  <text x="970" y="227" font-family="sans-serif" font-size="9" font-weight="700" fill="#00ff88" text-anchor="middle">ACTIVE</text>
+  <!-- Bottom cyan line -->
+  <rect x="0" y="620" width="1200" height="10" fill="url(#cyanGrad)" opacity="0.6"/>
+  <!-- Patent line -->
+  <text x="80" y="580" font-family="sans-serif" font-size="14" fill="rgba(255,255,255,0.25)">Patent pending · © 2026 Melchiorre Oliva</text>
+</svg>
