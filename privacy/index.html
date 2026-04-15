@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Privacy Policy - PC Brain</title>
+<meta name="description" content="Privacy Policy for PC Brain - Your AI OS. Locally Governed.">
+<link rel="canonical" href="https://pcbrain.ai/privacy">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#080b14;--surface:#0f1117;--cyan:#00d4ff;--purple:#7b2fff;--text:#e8eaf6;--muted:#6b7280;--border:rgba(0,212,255,.15)}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:16px;line-height:1.8;overflow-x:hidden}
+a{color:var(--cyan);text-decoration:none}
+a:hover{text-decoration:underline}
+.nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:56px;background:rgba(8,11,20,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.nav-brand{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:var(--cyan)}
+.nav-links{display:flex;gap:20px;align-items:center}
+.nav-links a{color:var(--muted);font-size:13px;font-weight:500}
+.nav-links a:hover{color:var(--text)}
+.container{max-width:760px;margin:0 auto;padding:100px 24px 80px}
+h1{font-size:36px;font-weight:800;margin-bottom:8px;background:linear-gradient(135deg,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.subtitle{font-size:14px;color:var(--muted);margin-bottom:48px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+h2{font-size:20px;font-weight:700;color:var(--cyan);margin:36px 0 12px;padding-top:12px}
+h3{font-size:16px;font-weight:600;color:#8ab4ff;margin:24px 0 10px}
+p{font-size:15px;color:rgba(232,234,246,.82);margin-bottom:14px}
+footer{text-align:center;padding:40px 24px;color:rgba(107,114,128,.5);font-size:12px;border-top:1px solid var(--border);margin-top:60px}
+footer a{color:var(--cyan);font-size:12px}
+@media(max-width:600px){.container{padding:80px 16px 60px}h1{font-size:26px}h2{font-size:18px}.nav{padding:0 16px}}
+</style>
+</head>
+<body>
+  <nav class="nav">
+    <a href="/" class="nav-brand">PC Brain</a>
+    <div class="nav-links">
+      <a href="/privacy">Privacy</a>
+      <a href="/eula">EULA</a>
+      <a href="/">Home</a>
+    </div>
+  </nav>
+  <div class="container">
+    <h1>Privacy Policy</h1>
+    <div class="subtitle">Effective April 15, 2026 | PC Brain LLC, Netcong, New Jersey</div>
+      <p>PC BRAIN PRIVACY POLICY</p>
+      <p>Effective Date: April 15, 2026 | PC BRAIN LLC, Netcong, New Jersey</p>
+      <p>PC BRAIN LLC ("we", "our", or "Company") is committed to protecting your privacy. This Privacy Policy explains what information PC Brain software ("Software") collects, how it is used, and your rights with respect to that information.</p>
+      <h2>1. OUR CORE PRINCIPLE</h2>
+      <p>PC Brain is built as a locally-governed system. Your personal data, files, memories, and AI interactions stay on your machine. PC BRAIN LLC servers receive only the minimum data required to operate the licensing and update systems.</p>
+      <h2>2. INFORMATION WE COLLECT</h2>
+      <h3>2.1 Data Collected by PC BRAIN LLC</h3>
+      <p>We collect only:</p>
+      <p>License activation: Your license key and a machine fingerprint hash (SHA256 of hostname + platform + processor). No raw hardware identifiers are transmitted.</p>
+      <p>Update checks: A User-Agent string ("PCBrain-Updater") sent every 4 hours. No personal data, no machine identifiers.</p>
+      <p>Optional telemetry (OFF by default): If you enable telemetry in your .env file, we receive software version, node role, platform type, and truncated error messages (max 200 characters, no user content).</p>
+      <h3>2.2 Data Stored Locally (Never Sent to PC BRAIN LLC)</h3>
+      <p>All of the following are stored exclusively on your machine:</p>
+      <p>Goals, tasks, memories, chat history, action outcomes, and your user profile (brain.db).</p>
+      <p>API keys and all configuration (.env).</p>
+      <p>Device credentials and smart home configurations.</p>
+      <p>Screen captures, file events, agent logs, and session handoffs.</p>
+      <p>All research files and chat attachments.</p>
+      <h3>2.3 Data Sent to Third-Party LLM Providers (Your Account)</h3>
+      <p>When you use AI features, the Software sends your prompts and contextual system data (active window title, CPU/RAM statistics, your configured goals and tasks) to the LLM provider YOU have configured using YOUR API key. This data goes to your account at OpenAI, Anthropic, Google, or another provider — not to PC BRAIN LLC. You are responsible for reviewing those providers' privacy policies.</p>
+      <h2>3. HOW WE USE INFORMATION</h2>
+      <p>The limited data we receive is used solely to:</p>
+      <p>Validate your license and prevent unauthorized use.</p>
+      <p>Determine whether a software update is available.</p>
+      <p>Diagnose software errors (only if you enable telemetry).</p>
+      <p>We do not sell, rent, or share your information with third parties for marketing purposes.</p>
+      <h2>4. DATA RETENTION</h2>
+      <p>License activation records are retained for the duration of your license.</p>
+      <p>Update check logs are not retained beyond standard server log rotation (30 days).</p>
+      <p>Telemetry data, if enabled, is retained for up to 90 days for error analysis purposes.</p>
+      <h2>5. THIRD-PARTY INTEGRATIONS</h2>
+      <p>PC Brain supports optional integrations with third-party services (smart home devices, GitHub, SMTP email, push notification servers). These integrations are configured entirely by you using your own credentials. Data sent through these integrations goes to your accounts at those services. PC BRAIN LLC has no visibility into this data.</p>
+      <h2>6. CHILDREN'S PRIVACY</h2>
+      <p>The Software is not directed to children under 13 years of age. We do not knowingly collect personal information from children under 13.</p>
+      <h2>7. SECURITY</h2>
+      <p>We use industry-standard security practices to protect data transmitted to our servers. Your license key is transmitted over HTTPS. Machine fingerprints are one-way hashed and cannot be reversed to identify your hardware. However, no method of transmission over the internet is 100% secure.</p>
+      <h2>8. YOUR RIGHTS</h2>
+      <p>You may contact us at any time to:</p>
+      <p>Request information about what data we hold related to your license.</p>
+      <p>Request deletion of your activation record (note: this will deactivate your license).</p>
+      <p>Disable telemetry at any time by setting TELEMETRY_ENABLED=false in your .env file.</p>
+      <h2>9. CHANGES TO THIS POLICY</h2>
+      <p>We may update this Privacy Policy from time to time. We will notify you of material changes through the Software's update mechanism or via the email address associated with your license purchase. Continued use of the Software after changes constitutes acceptance of the revised policy.</p>
+      <h2>10. CONTACT US</h2>
+      <p>If you have questions about this Privacy Policy, contact us at:</p>
+      <p>PC BRAIN LLC</p>
+      <p>151 Ledgewood Avenue, Netcong, NJ 07857</p>
+      <p>melo@pcbrain.ai</p>
+      <p>https://pcbrain.ai</p>
+  </div>
+  <footer>
+    <p>&copy; 2026 PC Brain LLC, Netcong, New Jersey. All rights reserved.</p>
+    <p><a href="/">Home</a> &middot; <a href="/privacy">Privacy Policy</a> &middot; <a href="/eula">EULA</a></p>
+  </footer>
+</body>
+</html>

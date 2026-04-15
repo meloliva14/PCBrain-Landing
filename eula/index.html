@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>End User License Agreement - PC Brain</title>
+<meta name="description" content="End User License Agreement for PC Brain - Your AI OS. Locally Governed.">
+<link rel="canonical" href="https://pcbrain.ai/eula">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#080b14;--surface:#0f1117;--cyan:#00d4ff;--purple:#7b2fff;--text:#e8eaf6;--muted:#6b7280;--border:rgba(0,212,255,.15)}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:16px;line-height:1.8;overflow-x:hidden}
+a{color:var(--cyan);text-decoration:none}
+a:hover{text-decoration:underline}
+.nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:56px;background:rgba(8,11,20,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.nav-brand{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:var(--cyan)}
+.nav-links{display:flex;gap:20px;align-items:center}
+.nav-links a{color:var(--muted);font-size:13px;font-weight:500}
+.nav-links a:hover{color:var(--text)}
+.container{max-width:760px;margin:0 auto;padding:100px 24px 80px}
+h1{font-size:36px;font-weight:800;margin-bottom:8px;background:linear-gradient(135deg,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.subtitle{font-size:14px;color:var(--muted);margin-bottom:48px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+h2{font-size:20px;font-weight:700;color:var(--cyan);margin:36px 0 12px;padding-top:12px}
+h3{font-size:16px;font-weight:600;color:#8ab4ff;margin:24px 0 10px}
+p{font-size:15px;color:rgba(232,234,246,.82);margin-bottom:14px}
+footer{text-align:center;padding:40px 24px;color:rgba(107,114,128,.5);font-size:12px;border-top:1px solid var(--border);margin-top:60px}
+footer a{color:var(--cyan);font-size:12px}
+@media(max-width:600px){.container{padding:80px 16px 60px}h1{font-size:26px}h2{font-size:18px}.nav{padding:0 16px}}
+</style>
+</head>
+<body>
+  <nav class="nav">
+    <a href="/" class="nav-brand">PC Brain</a>
+    <div class="nav-links">
+      <a href="/privacy">Privacy</a>
+      <a href="/eula">EULA</a>
+      <a href="/">Home</a>
+    </div>
+  </nav>
+  <div class="container">
+    <h1>End User License Agreement</h1>
+    <div class="subtitle">Effective April 15, 2026 | Version 2.0.0 | PC Brain LLC, Netcong, New Jersey</div>
+      <p>PC BRAIN END USER LICENSE AGREEMENT (EULA)</p>
+      <p>Effective Date: April 15, 2026 | Version: 2.0.0 | PC BRAIN LLC, Netcong, New Jersey</p>
+      <h2>1. ACCEPTANCE OF TERMS</h2>
+      <p>BY INSTALLING, ACTIVATING, OR USING PC BRAIN SOFTWARE ("SOFTWARE"), YOU AGREE TO BE BOUND BY THE TERMS OF THIS END USER LICENSE AGREEMENT ("AGREEMENT"). IF YOU DO NOT AGREE, DO NOT INSTALL OR USE THE SOFTWARE.</p>
+      <h2>2. LICENSE GRANT</h2>
+      <p>PC BRAIN LLC ("Company") grants you a limited, non-exclusive, non-transferable, revocable license to install and use the Software on machines you own or control, subject to the terms of this Agreement and your active license key.</p>
+      <h2>3. LICENSE KEY AND ACTIVATION</h2>
+      <p>The Software requires a valid license key for activation. Upon activation, the Software transmits your license key and a machine fingerprint hash (a one-way SHA256 hash of your hostname, platform, and processor — no raw hardware identifiers) to api.pcbrain.ai for validation. After initial activation, the Software operates fully offline. License keys are non-transferable and may not be shared.</p>
+      <h2>4. PERMITTED USES</h2>
+      <p>You may:</p>
+      <p>Install and use the Software on your own computers for personal or business purposes.</p>
+      <p>Configure the Software with your own third-party API keys (OpenAI, Anthropic, Google, etc.).</p>
+      <p>Use the distributed node feature across machines you own on your private network.</p>
+      <h2>5. RESTRICTIONS</h2>
+      <p>You may not:</p>
+      <p>Reverse engineer, decompile, or disassemble the Software.</p>
+      <p>Sell, sublicense, rent, or transfer your license key to any third party.</p>
+      <p>Remove or alter any proprietary notices or labels on the Software.</p>
+      <p>Use the Software to develop a competing product.</p>
+      <p>Circumvent or disable any licensing or activation mechanisms.</p>
+      <h2>6. DATA AND PRIVACY</h2>
+      <p>PC Brain is designed as a locally-governed system. The following data practices apply:</p>
+      <h3>6.1 Data That Stays Local</h3>
+      <p>All of the following are stored exclusively on your machine and are never transmitted to PC BRAIN LLC servers:</p>
+      <p>Your goals, tasks, memories, chat history, and action outcomes (brain.db).</p>
+      <p>Your API keys and configuration (.env file).</p>
+      <p>Device credentials, file events, session handoffs, and agent logs.</p>
+      <p>Screen captures, chat attachments, and research files.</p>
+      <h3>6.2 Data Transmitted to Third-Party LLM Providers</h3>
+      <p>When you use AI features, your prompts and contextual system data (active window title, CPU/RAM stats, your configured goals and tasks) are sent to the LLM provider YOU have configured (e.g., OpenAI, Anthropic, Google). This data is sent to YOUR account at those providers — not to PC BRAIN LLC servers. You are subject to those providers' privacy policies.</p>
+      <h3>6.3 Data Transmitted to PC BRAIN LLC</h3>
+      <p>The Software contacts PC BRAIN LLC servers only for:</p>
+      <p>License key activation (license key + machine fingerprint hash).</p>
+      <p>Update checks every 4 hours (User-Agent header only: "PCBrain-Updater" — no personal data).</p>
+      <h3>6.4 Optional Telemetry</h3>
+      <p>Telemetry is OFF by default. If you explicitly enable it, the Software may send: software version, node role, platform type, and truncated error messages (max 200 characters). No user content, file paths, or personal identifiers are included.</p>
+      <h2>7. AUTOMATIC UPDATE CHECKS</h2>
+      <p>The Software automatically checks api.pcbrain.ai/updates every 4 hours for available updates. No personal data is transmitted during this check. Software updates are never installed automatically — all updates require your explicit action.</p>
+      <h2>8. INTELLECTUAL PROPERTY</h2>
+      <p>The Software, including its source code, design, architecture, and all related materials, is the intellectual property of PC BRAIN LLC and is protected by applicable patent, copyright, and trade secret laws. The patent-pending status of the Software's core architecture is acknowledged. Nothing in this Agreement transfers any ownership rights to you.</p>
+      <h2>9. DISCLAIMER OF WARRANTIES</h2>
+      <p>THE SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. PC BRAIN LLC DOES NOT WARRANT THAT THE SOFTWARE WILL BE ERROR-FREE OR UNINTERRUPTED.</p>
+      <h2>10. LIMITATION OF LIABILITY</h2>
+      <p>TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, PC BRAIN LLC SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES ARISING OUT OF OR IN CONNECTION WITH YOUR USE OF THE SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. PC BRAIN LLC'S TOTAL LIABILITY SHALL NOT EXCEED THE AMOUNT YOU PAID FOR YOUR LICENSE IN THE TWELVE (12) MONTHS PRECEDING THE CLAIM.</p>
+      <h2>11. TERMINATION</h2>
+      <p>This Agreement is effective until terminated. PC BRAIN LLC may terminate this Agreement immediately if you breach any of its terms. Upon termination, you must cease all use of the Software and destroy all copies in your possession.</p>
+      <h2>12. GOVERNING LAW</h2>
+      <p>This Agreement shall be governed by and construed in accordance with the laws of the State of New Jersey, without regard to its conflict of law provisions. Any disputes shall be resolved in the state or federal courts located in Morris County, New Jersey.</p>
+      <h2>13. CONTACT</h2>
+      <p>PC BRAIN LLC</p>
+      <p>151 Ledgewood Avenue, Netcong, NJ 07857</p>
+      <p>melo@pcbrain.ai</p>
+      <p>https://pcbrain.ai</p>
+  </div>
+  <footer>
+    <p>&copy; 2026 PC Brain LLC, Netcong, New Jersey. All rights reserved.</p>
+    <p><a href="/">Home</a> &middot; <a href="/privacy">Privacy Policy</a> &middot; <a href="/eula">EULA</a></p>
+  </footer>
+</body>
+</html>
