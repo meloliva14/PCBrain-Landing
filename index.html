@@ -217,9 +217,9 @@ textarea.form-input{resize:vertical;min-height:72px}
           <div style="text-align:center;margin-top:6px;font-size:10px;color:var(--muted)">Goals: 10 &middot; Tasks: 3</div>
         </div>
         <div class="mock-tile">
-          <div class="mock-tile-label">Agent Autonomy</div>
-          <div style="margin:8px 0"><span class="mock-badge green">ACTIVE</span> <span class="mock-badge cyan">EXECUTE</span></div>
-          <div style="font-size:10px;color:var(--muted)">Mode: execute | Pending: 6</div>
+          <div class="mock-tile-label">Agent State</div>
+          <div style="margin:8px 0"><span class="mock-badge green">Standing by</span></div>
+          <div style="font-size:10px;color:var(--muted)">No active task</div>
           <div style="display:flex;gap:4px;margin-top:8px"><span style="padding:3px 8px;border-radius:4px;background:rgba(0,212,255,.08);font-size:9px;font-weight:600;color:var(--cyan)">Resume</span><span style="padding:3px 8px;border-radius:4px;background:rgba(0,212,255,.08);font-size:9px;font-weight:600;color:var(--cyan)">Tick</span><span style="padding:3px 8px;border-radius:4px;background:rgba(0,212,255,.08);font-size:9px;font-weight:600;color:var(--cyan)">Force</span></div>
         </div>
         <div class="mock-tile">
@@ -363,8 +363,8 @@ textarea.form-input{resize:vertical;min-height:72px}
       <p>Patent prosecution. Reproducible build + SBOM is the verifiability path right now; not a substitute for source. Source-access for license holders on the path; full public source after the patent grants. License terms include a source-escrow trigger if the company stops shipping.</p>
     </div>
     <div class="feature-card">
-      <h3 style="color:var(--cyan);font-size:13px;letter-spacing:.1em;margin-bottom:8px">NO LOCAL LLM</h3>
-      <p>Inference quality is bounded by the LLM you bring. PC Brain doesn't ship a model. Air-gap inference (Ollama integration) is on the path; not shipped.</p>
+      <h3 style="color:var(--cyan);font-size:13px;letter-spacing:.1em;margin-bottom:8px">DOESN'T SHIP A MODEL</h3>
+      <p>Inference quality is bounded by the LLM you bring. PC Brain doesn't ship a model. Ollama integration is shipped &mdash; point PC Brain at a running Ollama daemon for fully local inference. You install Ollama and choose the model.</p>
     </div>
     <div class="feature-card">
       <h3 style="color:var(--cyan);font-size:13px;letter-spacing:.1em;margin-bottom:8px">SINGLE-DEVELOPER BUILD</h3>
@@ -415,7 +415,7 @@ textarea.form-input{resize:vertical;min-height:72px}
     <a href="https://pcbrain.ai/terms">Terms of Service</a>
   </div>
   <div class="footer-right">
-    <div>BYOK: Anthropic, OpenAI, or Gemini &middot; Your account, your network call, your bill. There is no PC Brain proxy.</div>
+    <div>BYOK: Anthropic, OpenAI, Gemini, or local Ollama &middot; Your account, your network call, your bill. There is no PC Brain proxy.</div>
     <div class="footer-disclaimer">PC Brain is personal productivity software. It does not constitute financial, medical, or legal advice.</div>
   </div>
 </footer>
