@@ -1,503 +1,473 @@
-<!--
-  PC Brain Landing Page
-  Deploy: push index.html to GitHub repo connected to Porkbun static hosting
-  Formspree: replace xojyaqal before first push
-  Live at: https://pcbrain.ai
--->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="color-scheme" content="dark" />
 <title>PC Brain — A local autonomous agent for solo builders.</title>
-<meta name="description" content="A local autonomous agent. Built by one founder, runs on your machine, talks to whatever LLM you bring — no proxy, no analytics ride-along.">
-<link rel="canonical" href="https://pcbrain.ai">
-<meta name="title" content="PC Brain — A local autonomous agent for solo builders.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://pcbrain.ai">
-<meta property="og:title" content="PC Brain — A local autonomous agent">
-<meta property="og:description" content="Built by one founder, runs on your machine, talks to whatever LLM you bring. No PC Brain proxy in the path; you bring the key, you see the bill.">
-<meta property="og:image" content="https://pcbrain.ai/preview.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:url" content="https://pcbrain.ai">
-<meta name="twitter:title" content="PC Brain — A local autonomous agent">
-<meta name="twitter:description" content="Built by one founder, runs on your machine, talks to whatever LLM you bring. No PC Brain proxy in the path.">
-<meta name="twitter:image" content="https://pcbrain.ai/preview.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#080b14;--surface:#0f1117;--cyan:#00d4ff;--purple:#7b2fff;--text:#e8eaf6;--muted:#6b7280;--border:rgba(0,212,255,.15);--glow:rgba(0,212,255,.08);--radius:12px}
-html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:16px;line-height:1.6;overflow-x:hidden}
-a{color:var(--cyan);text-decoration:none}
-a:hover{text-decoration:underline}
-.skip-link{position:absolute;top:-40px;left:0;background:var(--cyan);color:#000;padding:8px 16px;z-index:9999;font-size:14px;border-radius:0 0 8px 0}
-.skip-link:focus{top:0}
-canvas#starfield{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
-section{position:relative;z-index:1}
-
-/* ── Nav ─────────────────────────────────────────── */
-.nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:56px;background:rgba(8,11,20,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
-.nav-brand{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:var(--cyan)}
-.nav-badge{display:inline-block;margin-left:10px;padding:2px 8px;border-radius:999px;background:rgba(255,170,0,.15);color:#f0a500;font-size:10px;font-weight:700;letter-spacing:.05em;vertical-align:middle}
-.btn-cta{display:inline-flex;align-items:center;padding:8px 20px;border:none;border-radius:999px;background:linear-gradient(135deg,var(--cyan),#0088cc);color:#000;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;transition:box-shadow .3s,transform .2s;letter-spacing:.02em}
-.btn-cta:hover{box-shadow:0 0 20px rgba(0,212,255,.4);transform:translateY(-1px);text-decoration:none}
-.btn-ghost{display:inline-flex;align-items:center;padding:8px 20px;border:1px solid var(--border);border-radius:999px;background:transparent;color:var(--text);font-size:13px;font-weight:600;cursor:pointer;text-decoration:none;transition:border-color .3s}
-.btn-ghost:hover{border-color:var(--cyan);text-decoration:none}
-
-/* ── Hero ────────────────────────────────────────── */
-.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 24px 40px}
-.hero-eyebrow{font-size:11px;font-weight:700;letter-spacing:.2em;color:var(--cyan);margin-bottom:24px;text-transform:uppercase}
-.hero h1{font-size:64px;font-weight:900;line-height:1.1;margin-bottom:24px;max-width:800px}
-.hero h1 span{background:linear-gradient(135deg,var(--cyan),#7b2fff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hero-sub{font-size:18px;color:var(--muted);max-width:580px;margin:0 auto 32px;line-height:1.7}
-.hero-ctas{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:32px}
-.hero-proof{font-size:12px;color:var(--muted);letter-spacing:.04em}
-.bounce-arrow{margin-top:40px;animation:bounce 2s infinite;color:var(--cyan);font-size:24px}
-@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
-
-/* ── Sections ────────────────────────────────────── */
-.section{padding:100px 24px;max-width:1100px;margin:0 auto}
-.section-label{font-size:11px;font-weight:700;letter-spacing:.2em;color:var(--cyan);text-transform:uppercase;margin-bottom:8px}
-.section h2{font-size:36px;font-weight:800;margin-bottom:16px}
-.section-sub{font-size:16px;color:var(--muted);max-width:600px;margin-bottom:48px}
-
-/* ── Dashboard Preview ───────────────────────────── */
-.browser-chrome{border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);box-shadow:0 0 60px var(--glow),0 20px 80px rgba(0,0,0,.5);max-width:960px;margin:0 auto 40px}
-.chrome-bar{display:flex;align-items:center;gap:8px;padding:10px 16px;background:#1a1d28;border-bottom:1px solid var(--border)}
-.chrome-dot{width:10px;height:10px;border-radius:50%}
-.chrome-dot.r{background:#ff5f57}.chrome-dot.y{background:#ffbd2e}.chrome-dot.g{background:#28c840}
-.chrome-url{flex:1;margin-left:12px;padding:4px 12px;border-radius:6px;background:rgba(255,255,255,.06);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)}
-.chrome-body{background:var(--bg);padding:16px;position:relative}
-.chrome-body::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,255,255,.008) 2px,rgba(255,255,255,.008) 3px);pointer-events:none}
-.mock-tabs{display:flex;gap:2px;margin-bottom:12px}
-.mock-tab{padding:6px 12px;font-size:10px;font-weight:600;color:var(--muted);background:rgba(255,255,255,.03);border-radius:6px 6px 0 0;letter-spacing:.04em}
-.mock-tab.active{color:var(--cyan);background:rgba(0,212,255,.08);border-bottom:2px solid var(--cyan)}
-.mock-tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.mock-tile{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px;min-height:100px}
-.mock-tile-label{font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:8px}
-.mock-ring{width:56px;height:56px;border-radius:50%;border:3px solid var(--cyan);display:flex;align-items:center;justify-content:center;margin:4px auto;box-shadow:0 0 12px var(--glow)}
-.mock-ring-val{font-size:18px;font-weight:800;color:var(--cyan)}
-.mock-badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:9px;font-weight:700;letter-spacing:.05em}
-.mock-badge.green{background:rgba(0,255,136,.12);color:#00ff88}
-.mock-badge.cyan{background:rgba(0,212,255,.12);color:var(--cyan)}
-.mock-typewriter{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);overflow:hidden;white-space:nowrap;border-right:2px solid var(--cyan);animation:typewriter 3s steps(40) infinite,blink .8s infinite}
-@keyframes typewriter{0%{width:0}70%{width:100%}100%{width:100%}}
-@keyframes blink{50%{border-color:transparent}}
-.mock-donut{width:56px;height:56px;border-radius:50%;background:conic-gradient(var(--cyan) 0% 35%,#7b2fff 35% 58%,#ff6b6b 58% 72%,rgba(255,255,255,.1) 72%);margin:4px auto;position:relative}
-.mock-donut::after{content:'';position:absolute;inset:12px;border-radius:50%;background:var(--surface)}
-.stat-pills{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
-.stat-pill{padding:8px 20px;border:1px solid var(--border);border-radius:999px;font-size:13px;font-weight:600;color:var(--muted)}
-.stat-pill strong{color:var(--text)}
-
-/* ── Feature Cards ───────────────────────────────── */
-.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.feature-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px 24px;transition:box-shadow .3s,border-color .3s}
-.feature-card:hover{box-shadow:0 0 30px var(--glow);border-color:rgba(0,212,255,.3)}
-.feature-icon{width:40px;height:40px;margin-bottom:16px;color:var(--cyan)}
-.feature-card h3{font-size:16px;font-weight:700;margin-bottom:8px}
-.feature-card p{font-size:14px;color:var(--muted);line-height:1.6}
-
-/* ── How It Works ────────────────────────────────── */
-.steps{display:flex;gap:0;align-items:flex-start;position:relative;margin-top:48px}
-.step{flex:1;text-align:center;position:relative;z-index:1}
-.step-icon{width:56px;height:56px;border-radius:50%;background:var(--surface);border:2px solid var(--cyan);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 0 20px var(--glow)}
-.step-icon svg{width:24px;height:24px;color:var(--cyan)}
-.step h4{font-size:14px;font-weight:800;letter-spacing:.1em;color:var(--cyan);margin-bottom:8px}
-.step p{font-size:13px;color:var(--muted);max-width:280px;margin:0 auto;line-height:1.6}
-.steps-line{position:absolute;top:28px;left:20%;right:20%;height:2px;background:repeating-linear-gradient(90deg,var(--cyan) 0 6px,transparent 6px 12px);opacity:.3;animation:dashFlow 2s linear infinite}
-@keyframes dashFlow{from{background-position:0 0}to{background-position:24px 0}}
-
-/* ── Stats ───────────────────────────────────────── */
-.stats-grid{display:flex;gap:24px;justify-content:center;flex-wrap:wrap;margin-top:48px}
-.stat-block{text-align:center;min-width:140px}
-.stat-num{font-size:48px;font-weight:900;color:var(--cyan);font-family:'JetBrains Mono',monospace}
-.stat-label{font-size:13px;color:var(--muted);margin-top:4px}
-
-/* ── Waitlist ────────────────────────────────────── */
-.waitlist-form{max-width:480px;margin:0 auto}
-.form-group{margin-bottom:16px}
-.form-group label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:4px;letter-spacing:.04em}
-.form-input{width:100%;padding:12px 16px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text);font-size:14px;font-family:'Inter',sans-serif;outline:none;transition:border-color .3s}
-.form-input:focus{border-color:var(--cyan);box-shadow:0 0 12px var(--glow)}
-textarea.form-input{resize:vertical;min-height:72px}
-.btn-submit{width:100%;padding:14px 24px;border:none;border-radius:8px;background:linear-gradient(135deg,var(--cyan),#0088cc);color:#000;font-size:15px;font-weight:800;cursor:pointer;letter-spacing:.03em;transition:box-shadow .3s,transform .2s}
-.btn-submit:hover{box-shadow:0 0 30px rgba(0,212,255,.4);transform:translateY(-1px)}
-.form-success{text-align:center;display:none}
-.form-success .checkmark{width:64px;height:64px;margin:0 auto 16px;border-radius:50%;border:3px solid var(--cyan);display:flex;align-items:center;justify-content:center;color:var(--cyan);font-size:28px}
-.form-success h3{font-size:24px;font-weight:800;color:var(--cyan);margin-bottom:8px}
-.form-success p{font-size:14px;color:var(--muted)}
-
-/* ── Footer ──────────────────────────────────────── */
-.footer{padding:48px 24px;border-top:1px solid var(--border);max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:24px;font-size:12px;color:var(--muted)}
-.footer a{color:var(--muted)}
-.footer a:hover{color:var(--cyan)}
-.footer-links{display:flex;gap:24px}
-.footer-right{text-align:right;max-width:300px}
-.footer-disclaimer{font-size:10px;margin-top:8px;opacity:.6}
-
-/* ── Animations ──────────────────────────────────── */
-.fade-up{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
-.fade-up.visible{opacity:1;transform:translateY(0)}
-@media(prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}.fade-up{opacity:1;transform:none}}
-
-/* ── Responsive ──────────────────────────────────── */
-@media(max-width:768px){
-  .hero h1{font-size:36px}
-  .hero-sub{font-size:16px}
-  .features-grid{grid-template-columns:1fr}
-  .steps{flex-direction:column;gap:32px}
-  .steps-line{display:none}
-  .mock-tiles{grid-template-columns:1fr}
-  .stats-grid{flex-direction:column;align-items:center}
-  .footer{flex-direction:column;text-align:center}
-  .footer-right{text-align:center;max-width:none}
-  .footer-links{justify-content:center}
-  .nav{padding:0 16px}
-}
-</style>
+<meta name="description" content="A local autonomous agent. Built by one founder, runs on your machine, talks to whatever LLM you bring — no proxy, no analytics ride-along." />
+<meta name="title" content="PC Brain — A local autonomous agent for solo builders." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://pcbrain.ai" />
+<meta property="og:title" content="PC Brain — A local autonomous agent" />
+<meta property="og:description" content="Built by one founder, runs on your machine, talks to whatever LLM you bring. No PC Brain proxy in the path; you bring the key, you see the bill." />
+<meta property="og:image" content="https://pcbrain.ai/preview.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content="https://pcbrain.ai" />
+<meta name="twitter:title" content="PC Brain — A local autonomous agent" />
+<meta name="twitter:description" content="Built by one founder, runs on your machine, talks to whatever LLM you bring. No PC Brain proxy in the path." />
+<meta name="twitter:image" content="https://pcbrain.ai/preview.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="premium.css" />
 </head>
 <body>
-<a href="#main" class="skip-link">Skip to content</a>
 <canvas id="starfield" aria-hidden="true"></canvas>
 
-<!-- ═══ NAV ═══════════════════════════════════════════════════════════ -->
-<nav class="nav" role="navigation" aria-label="Main navigation">
-  <div>
-    <span class="nav-brand">PC Brain</span>
-    <span class="nav-badge">Early Access</span>
+<!-- ═══ NAV ════════════════════════════════════════════════════ -->
+<nav class="nav" role="navigation" aria-label="Primary">
+  <div class="brand">
+    <span class="mark">PCBRAIN</span>
+    <span class="badge">Early Access</span>
   </div>
-  <div class="footer-links" style="gap:16px;display:flex"><a href="#features" style="color:#6b7280;font-size:13px">Features</a><a href="#how" style="color:#6b7280;font-size:13px">How It Works</a><a href="https://pcbrain.ai/privacy" style="color:#6b7280;font-size:13px">Privacy</a><a href="https://pcbrain.ai/terms" style="color:#6b7280;font-size:13px">Terms of Service</a></div>
-  <a href="#waitlist" class="btn-cta">Request Access</a>
+  <div class="links">
+    <a href="#features">Features</a>
+    <a href="#how">How it works</a>
+    <a href="#privacy">Privacy</a>
+    <a href="#limits">Limits</a>
+  </div>
+  <a href="#waitlist" class="cta-pill">Request Access →</a>
 </nav>
 
-<!-- ═══ HERO ══════════════════════════════════════════════════════════ -->
-<section class="hero" id="main">
-  <div class="hero-eyebrow">Local &middot; BYOK &middot; Operator-grade</div>
-  <h1>A local autonomous agent.<br><span>Built by one founder.</span></h1>
-  <p class="hero-sub">I'm Mel. I built this because generic AI tools won't run on my hardware and cloud agents won't. PC Brain runs on your machine, talks to whatever LLM you bring (Anthropic, OpenAI, Gemini), and asks before any action that touches the world. No proxy in the path; you bring the key, you see the bill.</p>
-  <div class="hero-ctas">
-    <!-- No public download button. PC Brain is early-access by invitation.
-         Invitees receive credentials out-of-band and download from
-         https://private.pcbrain.ai (Basic auth). Never expose the
-         installer URL on the public landing surface. -->
-    <a href="#waitlist" class="btn-cta">Request Early Access</a>
-    <a href="#features" class="btn-ghost">See How It Works</a>
-  </div>
-  <div class="hero-proof">Patent pending &middot; &copy; 2026 Melchiorre Oliva &middot; Early access invite-only</div>
-  <div class="bounce-arrow" aria-hidden="true">&#8964;</div>
-</section>
+<main>
 
-<!-- ═══ DASHBOARD PREVIEW ════════════════════════════════════════════ -->
-<section class="section fade-up" id="preview">
-  <div class="section-label">The Command Center</div>
-  <div class="browser-chrome">
-    <div class="chrome-bar">
-      <div class="chrome-dot r"></div>
-      <div class="chrome-dot y"></div>
-      <div class="chrome-dot g"></div>
-      <div class="chrome-url">localhost:5050/dashboard</div>
+<!-- ═══ HERO ═══════════════════════════════════════════════════ -->
+<section class="hero" id="main" data-screen-label="01 Hero">
+  <div class="hero-text">
+    <div class="eyebrow"><span class="dot"></span>Local · BYOK · Operator-grade</div>
+    <h1 class="hero-h1">A local autonomous agent.<br /><span class="grad">Built by one founder.</span></h1>
+    <p class="lede">I'm Mel. I built this because generic AI tools won't run on my hardware and cloud agents won't. PC Brain runs on your machine, talks to whatever LLM you bring (Anthropic, OpenAI, Gemini), and asks before any action that touches the world. No proxy in the path; you bring the key, you see the bill.</p>
+    <div class="hero-ctas">
+      <a href="#waitlist" class="btn-primary">Request Early Access →</a>
+      <a href="#how" class="btn-ghost">See how it works</a>
     </div>
-    <div class="chrome-body">
-      <div class="mock-tabs">
-        <div class="mock-tab active">Home</div>
-        <div class="mock-tab">Observatory</div>
-        <div class="mock-tab">Devices</div>
-        <div class="mock-tab">Developer</div>
-        <div class="mock-tab">Business</div>
-      </div>
-      <div class="mock-tiles">
-        <div class="mock-tile">
-          <div class="mock-tile-label">System Health</div>
-          <div class="mock-ring"><div class="mock-ring-val">100</div></div>
-          <div style="text-align:center;margin-top:6px;font-size:10px;color:var(--muted)">Goals: 10 &middot; Tasks: 3</div>
-        </div>
-        <div class="mock-tile">
-          <div class="mock-tile-label">Agent State</div>
-          <div style="margin:8px 0"><span class="mock-badge green">Standing by</span></div>
-          <div style="font-size:10px;color:var(--muted)">No active task</div>
-          <div style="display:flex;gap:4px;margin-top:8px"><span style="padding:3px 8px;border-radius:4px;background:rgba(0,212,255,.08);font-size:9px;font-weight:600;color:var(--cyan)">Resume</span><span style="padding:3px 8px;border-radius:4px;background:rgba(0,212,255,.08);font-size:9px;font-weight:600;color:var(--cyan)">Tick</span><span style="padding:3px 8px;border-radius:4px;background:rgba(0,212,255,.08);font-size:9px;font-weight:600;color:var(--cyan)">Force</span></div>
-        </div>
-        <div class="mock-tile">
-          <div class="mock-tile-label">Current Thought</div>
-          <div class="mock-typewriter">Active goals present. Goals tracked.</div>
-          <div style="margin-top:8px"><span class="mock-badge cyan">OBSERVE</span></div>
-          <div style="font-size:9px;color:var(--muted);margin-top:4px">2:02 AM</div>
-        </div>
-        <div class="mock-tile">
-          <div class="mock-tile-label">Finance Overview</div>
-          <div class="mock-donut"></div>
-          <div style="text-align:center;font-size:10px;color:var(--muted);margin-top:6px">Housing &middot; Food &middot; Transport</div>
-        </div>
-      </div>
+    <div class="hero-proof">
+      <span>Patent pending</span><span>·</span>
+      <span>© 2026 Melchiorre Oliva</span><span>·</span>
+      <span>Invite-only</span>
     </div>
   </div>
-  <div class="stat-pills">
-    <div class="stat-pill"><strong>~90</strong> Skills</div>
-    <div class="stat-pill"><strong>5</strong> Tabs</div>
-    <div class="stat-pill"><strong>100%</strong> Local</div>
-  </div>
+
+  <!-- ═══ DASHBOARD CONSOLE — THE CENTERPIECE ═══════════════════ -->
+  <div class="console-wrap">
+    <div class="console" role="img" aria-label="PC Brain command console preview">
+      <!-- Header bar -->
+      <div class="cn-head">
+        <div class="lights"><span></span><span></span><span></span></div>
+        <div class="title"><b>PCBRAIN</b> /// COMMAND CONSOLE</div>
+        <div class="ver">v2.1.0</div>
+        <div class="spacer"></div>
+        <div class="live"><span class="pulse"></span>Online</div>
+      </div>
+
+      <!-- Body: rail + main -->
+      <div class="cn-body">
+        <aside class="cn-rail" aria-hidden="true">
+          <button class="ic active" title="Observatory">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+          <button class="ic" title="Devices">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><line x1="8" y1="22" x2="16" y2="22"/></svg>
+          </button>
+          <button class="ic" title="Decisions">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h12"/></svg>
+          </button>
+          <button class="ic" title="Capabilities">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          </button>
+          <div class="div"></div>
+          <button class="ic" title="Settings">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.01a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.01a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </button>
+        </aside>
+
+        <div class="cn-main">
+
+          <!-- Cognition Loop strip -->
+          <div class="cn-loop">
+            <div class="ll"><b>Cognition Loop</b> · Tick 02:14:31</div>
+            <div class="stages">
+              <div class="stage is-done">
+                <div class="ring">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </div>
+                <div class="lab">Observe</div>
+              </div>
+              <div class="stage-edge is-flow"></div>
+              <div class="stage is-active">
+                <div class="ring">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M7 17l5-10 5 10"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2"/></svg>
+                </div>
+                <div class="lab">Orient</div>
+              </div>
+              <div class="stage-edge"></div>
+              <div class="stage">
+                <div class="ring">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M5 12l7-7 7 7"/></svg>
+                </div>
+                <div class="lab">Decide</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tile: System Pulse (telemetry) -->
+          <div class="tile tile-pulse">
+            <div class="tile-head">
+              <span class="name">System Pulse</span>
+              <span class="status s-online"><span class="d"></span>Nominal</span>
+            </div>
+            <svg class="spark" viewBox="0 0 200 60" preserveAspectRatio="none" width="100%" height="60" aria-hidden="true">
+              <defs>
+                <linearGradient id="sparkG" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0%" stop-color="#00d4ff" stop-opacity="0.45"/>
+                  <stop offset="100%" stop-color="#00d4ff" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <path d="M0,40 L20,38 L36,32 L48,42 L60,30 L72,34 L88,22 L100,28 L112,18 L128,30 L144,24 L160,36 L176,28 L188,34 L200,30 L200,60 L0,60 Z" fill="url(#sparkG)"/>
+              <path d="M0,40 L20,38 L36,32 L48,42 L60,30 L72,34 L88,22 L100,28 L112,18 L128,30 L144,24 L160,36 L176,28 L188,34 L200,30" fill="none" stroke="#00d4ff" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+              <circle cx="200" cy="30" r="3" fill="#00d4ff">
+                <animate attributeName="r" values="3;5;3" dur="1.8s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="1;0.4;1" dur="1.8s" repeatCount="indefinite"/>
+              </circle>
+            </svg>
+            <div class="lab2">Stable · last tick 02:14</div>
+          </div>
+
+          <!-- Tile: Device Mesh -->
+          <div class="tile tile-devices">
+            <div class="tile-head">
+              <span class="name">Device Mesh</span>
+              <span class="status s-online"><span class="d"></span>Linked</span>
+            </div>
+            <div class="list">
+              <div class="row s-online"><span class="dot"></span><span class="nm">Home Assistant</span><span class="meta">Hub</span></div>
+              <div class="row s-online"><span class="dot"></span><span class="nm">Philips Hue Bridge</span><span class="meta">Light</span></div>
+              <div class="row s-busy"><span class="dot"></span><span class="nm">Bambu Carbon X1</span><span class="meta">Printing</span></div>
+              <div class="row s-online"><span class="dot"></span><span class="nm">AC Infinity</span><span class="meta">Climate</span></div>
+              <div class="row s-online"><span class="dot"></span><span class="nm">Kasa Smart Strip</span><span class="meta">Power</span></div>
+            </div>
+          </div>
+
+          <!-- Tile: Decision Log (plain-English) -->
+          <div class="tile tile-log">
+            <div class="tile-head">
+              <span class="name">Decision Log</span>
+              <span class="status s-online"><span class="d"></span>Live</span>
+            </div>
+            <div class="feed">
+              <div class="e"><span class="t">02:14</span><span class="tag tag-obs">OBS</span><span class="msg">Reviewed inbox. Nothing actionable right now.</span></div>
+              <div class="e"><span class="t">02:11</span><span class="tag tag-ask">ASK</span><span class="msg">Asked to draft a vendor email. You approved.</span></div>
+              <div class="e"><span class="t">02:07</span><span class="tag tag-skp">SKP</span><span class="msg">Skipped: not enough context to proceed.</span></div>
+              <div class="e"><span class="t">02:03</span><span class="tag tag-act">ACT</span><span class="msg">Sync to printer complete; print queued.</span></div>
+              <div class="e"><span class="t">01:58</span><span class="tag tag-obs">OBS</span><span class="msg">Reviewing today's calendar.</span></div>
+              <div class="e"><span class="t">01:48</span><span class="tag tag-ok">OK</span><span class="msg">Standing by.</span></div>
+            </div>
+          </div>
+
+          <!-- Bottom row: Action gate (left) + Idle state (right) -->
+          <div class="cn-bot">
+            <div class="gate">
+              <div class="gate-head">
+                <span class="pill">Action Gate</span>
+                <span class="name">Awaiting your approval</span>
+                <span class="spacer"></span>
+                <span class="req">REQ-0412</span>
+              </div>
+              <div class="gate-prompt">
+                Send the drafted email to <b>vendor (external)</b> about the shipping delay?
+              </div>
+              <div class="gate-detail">
+                <span class="lab">Draft preview · written in your tone</span>
+                "Hi — checking in on the late shipment. I've held off on reordering until I hear back. Let me know what makes sense from your side. — Mel"
+              </div>
+              <div class="gate-actions">
+                <button class="gate-btn deny">Deny</button>
+                <button class="gate-btn modify">Modify</button>
+                <button class="gate-btn allow">Approve</button>
+              </div>
+              <div class="gate-foot">
+                <span>Risk class</span>
+                <span class="cls green">Green</span>
+                <span class="cls amber">Amber</span>
+                <span class="cls red">Red</span>
+                <span class="cls sealed">Sealed</span>
+              </div>
+            </div>
+
+            <div class="idle">
+              <div class="idle-head">
+                <span class="name">Standing By</span>
+              </div>
+              <div class="idle-orb"><div class="core"></div></div>
+              <div class="idle-msg">Nothing to report.</div>
+              <div class="idle-foot">Last activity 01:48</div>
+            </div>
+          </div>
+
+        </div><!-- /.cn-main -->
+      </div><!-- /.cn-body -->
+    </div><!-- /.console -->
+  </div><!-- /.console-wrap -->
 </section>
 
-<!-- ═══ FEATURES ═════════════════════════════════════════════════════ -->
-<section class="section fade-up" id="features">
-  <div class="section-label">What it does today</div>
-  <h2>The agent layer, honestly described.</h2>
-  <div class="section-sub"></div>
-  <div class="features-grid">
-    <div class="feature-card">
-      <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 000 20M2 12h20M12 2c3 3 4.5 6.5 4.5 10s-1.5 7-4.5 10"/></svg>
+
+<!-- ═══ FEATURES ═══════════════════════════════════════════════ -->
+<section id="features" data-screen-label="02 Features">
+  <div class="sec-head">
+    <div class="eyebrow"><span class="dot"></span>What it does today</div>
+    <h2 class="sec-title">The agent layer, honestly described.</h2>
+  </div>
+
+  <div class="f-grid">
+    <article class="f-card">
+      <div class="ic">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20M2 12h20"/></svg>
+      </div>
       <h3>Always there, never noisy</h3>
-      <p>It keeps an eye on the things you've okayed &mdash; your projects, your to-dos. When something's worth your attention, it speaks up. When nothing is, it stays quiet. No busywork, no fake 'look how busy I am' updates.</p>
-    </div>
-    <div class="feature-card">
-      <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+      <p>It keeps an eye on the things you've okayed — your projects, your to-dos. When something's worth your attention, it speaks up. When nothing is, it stays quiet. No busywork, no fake 'look how busy I am' updates.</p>
+    </article>
+
+    <article class="f-card">
+      <div class="ic violet">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
       <h3>Hundreds of skills, all on a leash</h3>
-      <p>PC Brain can do 539 different things and counting across 17 corners of your day. Every one is graded by how risky it is, and anything that touches the real world stops and asks you first. It's not 539 finished tricks &mdash; it's 539 fenced-in moves it can reach for, only when you say go.</p>
-    </div>
-    <div class="feature-card">
-      <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="18" r="3"/><line x1="6" y1="9" x2="6" y2="15"/><line x1="18" y1="9" x2="18" y2="15"/><line x1="9" y1="6" x2="15" y2="6"/><line x1="9" y1="18" x2="15" y2="18"/></svg>
+      <p>PC Brain can do hundreds of different things across 17 corners of your digital life. Every one is graded by how risky it is, and anything that touches the real world stops and asks you first. It's not 434 finished tricks — it's 434 fenced-in moves it can reach for, only when you say go.</p>
+    </article>
+
+    <article class="f-card">
+      <div class="ic">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="18" r="3"/><line x1="6" y1="9" x2="6" y2="15"/><line x1="18" y1="9" x2="18" y2="15"/><line x1="9" y1="6" x2="15" y2="6"/><line x1="9" y1="18" x2="15" y2="18"/></svg>
+      </div>
       <h3>Use all your computers as one</h3>
-      <p>Got more than one machine? Flip it on and PC Brain spreads the work across them over your own private network. Only have one? You'll never even see this &mdash; it stays out of the way until you add another.</p>
-    </div>
-    <div class="feature-card">
-      <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      <p>Got more than one machine? Flip it on and PC Brain spreads the work across them over your own private network. Only have one? You'll never even see this — it stays out of the way until you add another.</p>
+    </article>
+
+    <article class="f-card">
+      <div class="ic amber">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      </div>
       <h3>Talks to your real stuff</h3>
-      <p>Lights, plugs, cameras, climate gear, your 3D printer. PC Brain speaks MQTT directly today, with Bambu printers wired in as the first concrete adapter. Anything that exposes a REST endpoint &mdash; most modern smart-home gear &mdash; drops in as a small adapter file. New brand wrappers land in release notes, not on a marketing wall.</p>
-    </div>
-    <div class="feature-card">
-      <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      <p>Lights, plugs, cameras, climate gear, even your 3D printer. PC Brain already speaks the big names — Home Assistant, Philips Hue, SmartThings, Matter, HomeKit, Ring, Govee, Kasa, Tuya, Alexa, Google Home, LG ThinQ, AC Infinity, Blink. Got something off the beaten path? It can usually reach that too.</p>
+    </article>
+
+    <article class="f-card">
+      <div class="ic">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      </div>
       <h3>Put your idle computer to work</h3>
-      <p>When your machine is just sitting there, PC Brain can rent out its spare power and earn you a little money. It shows you the honest math &mdash; what you made, the fees, the electricity, the wear &mdash; never just the rosy number. You preview every rental before anything actually happens.</p>
-    </div>
-    <div class="feature-card">
-      <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 7h18M3 12h18M3 17h12"/></svg>
+      <p>When your machine is just sitting there, PC Brain can rent out its spare power and earn you a little money. It shows you the honest math — what you made, the fees, the electricity, the wear — never just the rosy number. You preview every rental before anything actually happens.</p>
+    </article>
+
+    <article class="f-card">
+      <div class="ic violet">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 7h18M3 12h18M3 17h12"/></svg>
+      </div>
       <h3>It sounds like you, not a robot</h3>
-      <p>Point it at your writing and it helps without steamrolling your voice &mdash; it quotes you back to yourself instead of turning everything into marketing mush. Everything it's done is right there in plain English, ready to read back anytime.</p>
-    </div>
+      <p>Point it at your writing and it helps without steamrolling your voice — it quotes you back to yourself instead of turning everything into marketing mush. Everything it's done is right there in plain English, ready to read back anytime.</p>
+    </article>
   </div>
-  <div style="margin-top:32px;padding:16px 24px;border:1px solid rgba(0,212,255,.2);border-radius:8px;text-align:center;font-size:14px;color:var(--muted);line-height:1.7;max-width:720px;margin-left:auto;margin-right:auto"><strong style="color:var(--text)">Consent floor.</strong> On first run I show you exactly what I'm about to watch &mdash; calendar, tasks, recent activity, devices you've connected &mdash; and you check the boxes. Anything you don't check, I never read. No background ticking until you've turned the watch surfaces on, one at a time.</div>
+
+  <div class="consent">
+    <b>Consent floor.</b> On first run I show you exactly what I'm about to watch — calendar, tasks, recent activity, devices you've connected — and you check the boxes. Anything you don't check, I never read. No background ticking until you've turned the watch surfaces on, one at a time.
+  </div>
 </section>
 
-<!-- ═══ HOW IT WORKS ═════════════════════════════════════════════════ -->
-<section class="section fade-up" id="how">
-  <div class="section-label">Under the Hood</div>
-  <h2>Built Different by Design</h2>
-  <div class="steps">
-    <div class="steps-line" aria-hidden="true"></div>
-    <div class="step">
-      <div class="step-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+
+<!-- ═══ HOW IT WORKS ═══════════════════════════════════════════ -->
+<section id="how" data-screen-label="03 How it works">
+  <div class="sec-head">
+    <div class="eyebrow"><span class="dot"></span>Under the hood</div>
+    <h2 class="sec-title">Built different by design.</h2>
+  </div>
+
+  <div class="h-steps">
+    <div class="h-step">
+      <div class="num">01</div>
+      <div class="ring">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
       </div>
-      <h4>OBSERVE</h4>
+      <h4>Observe</h4>
       <p>The agent reads your goals, active tasks, smart home state, finances, and episodic memory on every tick.</p>
     </div>
-    <div class="step">
-      <div class="step-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="5 12 12 5 19 12"/><line x1="5" y1="19" x2="19" y2="19"/></svg>
+    <div class="h-step">
+      <div class="num">02</div>
+      <div class="ring">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="5 12 12 5 19 12"/><line x1="5" y1="19" x2="19" y2="19"/></svg>
       </div>
-      <h4>DECIDE</h4>
-      <p>A governed reasoning chain &mdash; OBSERVE, PRIORITIZE, HYPOTHESIZE, GOVERN, DECIDE &mdash; produces structured JSON actions.</p>
+      <h4>Decide</h4>
+      <p>A governed reasoning chain — Observe, Prioritize, Hypothesize, Govern, Decide — produces structured JSON actions.</p>
     </div>
-    <div class="step">
-      <div class="step-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+    <div class="h-step">
+      <div class="num">03</div>
+      <div class="ring">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
       </div>
-      <h4>EXECUTE</h4>
+      <h4>Execute</h4>
       <p>Approved actions run. Files move. Tasks update. Devices respond. Everything is logged to your local database.</p>
     </div>
   </div>
 </section>
 
-<!-- ═══ STATS ════════════════════════════════════════════════════════ -->
-<section class="section fade-up" id="stats">
-  <div class="stats-grid">
-    <div class="stat-block"><div class="stat-num" data-target="31">0</div><div class="stat-label">Health checks passing</div></div>
-    <div class="stat-block"><div class="stat-num" data-target="9">0</div><div class="stat-label">Smart home integrations</div></div>
-    <div class="stat-block"><div class="stat-num" data-target="100" data-suffix="%">0</div><div class="stat-label">Yours. Always.</div></div>
-    <div class="stat-block"><div class="stat-num" data-prefix="v" data-target="2.0" data-decimals="1">0</div><div class="stat-label">Early access. Now.</div></div>
+
+<!-- ═══ VERIFIED NUMBERS (replaces old Stats) ══════════════════ -->
+<section id="verified" data-screen-label="04 Verified numbers">
+  <div class="sec-head">
+    <div class="eyebrow"><span class="dot"></span>What's actually shipped</div>
+    <h2 class="sec-title">Verified numbers only.</h2>
+    <p class="sec-sub">Everything below is countable on the install you'd receive. Anything we're not sure of lives under Honest limits, not here.</p>
+  </div>
+
+  <div class="verified-strip">
+    <div class="spec">
+      <div class="v">434</div>
+      <div class="l">Verbs · capability registry</div>
+    </div>
+    <div class="spec">
+      <div class="v">17</div>
+      <div class="l">Domains · risk-classed &amp; gated</div>
+    </div>
+    <div class="spec">
+      <div class="v">100<small>%</small></div>
+      <div class="l">Yours. Always.</div>
+    </div>
+    <div class="spec">
+      <div class="v">v2.1.0</div>
+      <div class="l">Early access. Now.</div>
+    </div>
   </div>
 </section>
 
 
-<!-- ═══ PRIVACY ═══════════════════════════════════════════════════════════════════ -->
-<section class="section fade-up" id="privacy">
-  <div class="section-label">What you can verify</div>
-  <h2>Things you can confirm yourself.</h2>
-  <div class="section-sub" style="margin-bottom:36px">No marketing claims. Things you can confirm on your machine, with the install you have in front of you.</div>
-  <div class="features-grid" style="grid-template-columns:repeat(3,1fr)">
-    <div class="feature-card">
-      <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+<!-- ═══ PRIVACY / WHAT YOU CAN VERIFY ══════════════════════════ -->
+<section id="privacy" data-screen-label="05 What you can verify">
+  <div class="sec-head">
+    <div class="eyebrow"><span class="dot"></span>What you can verify</div>
+    <h2 class="sec-title">Things you can confirm yourself.</h2>
+    <p class="sec-sub">No marketing claims. Things you can confirm on your machine, with the install you have in front of you.</p>
+  </div>
+
+  <div class="verify-grid">
+    <article class="verify-card">
+      <div class="ic">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </div>
       <h3>Trace every byte</h3>
-      <p><code style="color:var(--cyan);font-family:'JetBrains Mono',monospace;font-size:12px">pcbrain --trace-network</code> logs every outbound HTTP call. Inference goes to the LLM provider whose key you configured. License-key activation hits api.pcbrain.ai once at install. Auto-update background checker polls every 4 hours by default (override or disable in Settings). Telemetry / heartbeat / panic-upload all opt-in, default OFF.</p>
-    </div>
-    <div class="feature-card">
-      <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"/></svg>
+      <p><code>pcbrain --trace-network</code> logs every outbound HTTP call. Inference goes to the LLM provider whose key you configured. License-key activation hits api.pcbrain.ai once at install. Auto-update background checker polls every 4 hours by default (override or disable in Settings). Telemetry / heartbeat / panic-upload all opt-in, default OFF.</p>
+    </article>
+
+    <article class="verify-card">
+      <div class="ic">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"/></svg>
+      </div>
       <h3>Local memory you own</h3>
-      <p><code style="color:var(--cyan);font-family:'JetBrains Mono',monospace;font-size:12px">brain.db</code> is yours. Append-only audit log: <code style="color:var(--cyan);font-family:'JetBrains Mono',monospace;font-size:11px">id, made_at, decision_type, rationale, outcome_summary, outcome_evidence_json</code>. Query with <code style="color:var(--cyan);font-family:'JetBrains Mono',monospace;font-size:11px">sqlite3 brain.db</code> or via <code style="color:var(--cyan);font-family:'JetBrains Mono',monospace;font-size:11px">/api/decisions</code>. 90-day default retention; user-configurable.</p>
-    </div>
-    <div class="feature-card">
-      <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      <p><code>brain.db</code> is yours. Append-only audit log: <code>id, made_at, decision_type, rationale, outcome_summary, outcome_evidence_json</code>. Query with <code>sqlite3 brain.db</code> or via <code>/api/decisions</code>. 90-day default retention; user-configurable.</p>
+    </article>
+
+    <article class="verify-card">
+      <div class="ic">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      </div>
       <h3>BYOK + privacy by construction</h3>
-      <p>You bring the key (Anthropic / OpenAI / Gemini), you see the bill, you can rotate or revoke whenever. Provider switch in Settings, no restart. GDPR + CCPA compliant by construction &mdash; PC Brain has no data because it never receives any. License key is the only thing on the company servers.</p>
-    </div>
+      <p>You bring the key (Anthropic / OpenAI / Gemini), you see the bill, you can rotate or revoke whenever. Provider switch in Settings, no restart. GDPR + CCPA compliant by construction — PC Brain has no data because it never receives any. License key is the only thing on the company servers.</p>
+    </article>
   </div>
 </section>
 
-<!-- ═══ HONEST LIMITS ═════════════════════════════════════════════════ -->
-<section class="section fade-up">
-  <div class="section-label">Honest limits</div>
-  <h2 style="margin-bottom:32px">What it isn't.</h2>
-  <div class="section-sub" style="margin-bottom:36px">Things the limits section says aren't shipped. If you need any of these today, this isn't ready for you yet &mdash; say so when you apply.</div>
-  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:20px">
-    <div class="feature-card">
-      <h3 style="color:var(--cyan);font-size:13px;letter-spacing:.1em;margin-bottom:8px">WINDOWS-FIRST</h3>
-      <p>That's where I built it. macOS / Linux on the path; not shipped. If your fleet is Linux NUCs, Pis, or macOS, you cannot run this today &mdash; apply anyway and I'll add you to the cross-platform beta when it ships (target Q3 2026).</p>
-    </div>
-    <div class="feature-card">
-      <h3 style="color:var(--cyan);font-size:13px;letter-spacing:.1em;margin-bottom:8px">CLOSED BINARY TODAY</h3>
+
+<!-- ═══ HONEST LIMITS ══════════════════════════════════════════ -->
+<section id="limits" data-screen-label="06 Honest limits">
+  <div class="sec-head">
+    <div class="eyebrow"><span class="dot"></span>Honest limits</div>
+    <h2 class="sec-title">What it isn't.</h2>
+    <p class="sec-sub">Things the limits section says aren't shipped. If you need any of these today, this isn't ready for you yet — say so when you apply.</p>
+  </div>
+
+  <div class="limits-grid">
+    <article class="limit">
+      <h3>Windows-first</h3>
+      <p>That's where I built it. macOS / Linux on the path; not shipped. If your fleet is Linux NUCs, Pis, or macOS, you cannot run this today — apply anyway and I'll add you to the cross-platform beta when it ships (target Q3 2026).</p>
+    </article>
+
+    <article class="limit">
+      <h3>Closed binary today</h3>
       <p>Patent prosecution. Reproducible build + SBOM is the verifiability path right now; not a substitute for source. Source-access for license holders on the path; full public source after the patent grants. License terms include a source-escrow trigger if the company stops shipping.</p>
-    </div>
-    <div class="feature-card">
-      <h3 style="color:var(--cyan);font-size:13px;letter-spacing:.1em;margin-bottom:8px">DOESN'T SHIP A MODEL</h3>
-      <p>Inference quality is bounded by the LLM you bring. PC Brain doesn't ship a model. Ollama integration is shipped &mdash; point PC Brain at a running Ollama daemon for fully local inference. You install Ollama and choose the model.</p>
-    </div>
-    <div class="feature-card">
-      <h3 style="color:var(--cyan);font-size:13px;letter-spacing:.1em;margin-bottom:8px">SINGLE-DEVELOPER BUILD</h3>
-      <p>One founder shipping under deadline. Hit-by-a-bus risk is real and I name it explicitly. Smart-home depth today: MQTT + REST primitives + Bambu integration shipped. Native Home Assistant, Hue, Z-Wave on the roadmap; not shipped.</p>
-    </div>
+    </article>
+
+    <article class="limit">
+      <h3>Doesn't ship a model</h3>
+      <p>Inference quality is bounded by the LLM you bring. PC Brain doesn't ship a model. Ollama integration is shipped — point PC Brain at a running Ollama daemon for fully local inference. You install Ollama and choose the model.</p>
+    </article>
+
+    <article class="limit">
+      <h3>Single-developer build</h3>
+      <p>One founder shipping under deadline. Hit-by-a-bus risk is real and I name it explicitly. Smart-home depth today: the named adapter list above is shipped, plus MQTT (Bambu) and generic REST primitives. Z-Wave is still not shipped; on the roadmap.</p>
+    </article>
   </div>
 </section>
 
-<!-- ═══ WAITLIST ══════════════════════════════════════════════════════ -->
-<section class="section fade-up" id="waitlist">
-  <div class="section-label">Early access</div>
-  <h2>Apply.</h2>
-  <p class="section-sub">Invite-only while I tune it on real workloads. Apply if anything above sounds like you. I review applications personally; you'll hear from me at melo@pcbrain.ai if I think it's a fit. If you need something the limits section says isn't shipped, say so &mdash; I'd rather know than waste your time.</p>
-  <div class="waitlist-form">
-    <form id="ea-form" action="https://formspree.io/f/xojyaqal" method="POST">
-      <div class="form-group">
-        <label for="ea-name">Name</label>
-        <input type="text" id="ea-name" name="name" class="form-input" placeholder="Your name" required aria-label="Your name">
-      </div>
-      <div class="form-group">
-        <label for="ea-email">Email</label>
-        <input type="email" id="ea-email" name="email" class="form-input" placeholder="your@email.com" required aria-label="Your email">
-      </div>
-      <div class="form-group">
-        <label for="ea-why">What would you use PC Brain for? (optional)</label>
-        <textarea id="ea-why" name="message" class="form-input" rows="3" placeholder="What would you use PC Brain for?" aria-label="What would you use PC Brain for?"></textarea>
-      </div>
-      <button type="submit" class="btn-submit">Request Early Access</button>
-    </form>
-    <div class="form-success" id="form-success">
-      <div class="checkmark">&#10003;</div>
-      <h3>You're on the list.</h3>
-      <p>We review applications personally. If selected, expect an email from melo@pcbrain.ai within a few days.</p>
-    </div>
+
+<!-- ═══ WAITLIST ═══════════════════════════════════════════════ -->
+<section id="waitlist" data-screen-label="07 Waitlist">
+  <div class="sec-head">
+    <div class="eyebrow"><span class="dot"></span>Early access</div>
+    <h2 class="sec-title">Apply.</h2>
+    <p class="sec-sub">Invite-only while I tune it on real workloads. Apply if anything above sounds like you. I review applications personally; you'll hear from me at <a href="mailto:melo@pcbrain.ai">melo@pcbrain.ai</a> if I think it's a fit. If you need something the limits section says isn't shipped, say so — I'd rather know than waste your time.</p>
   </div>
+
+  <form class="wl" id="ea-form" action="https://formspree.io/f/xojyaqal" method="POST">
+    <input type="hidden" name="_next" value="https://pcbrain.ai/thanks.html" />
+    <div class="wl-field">
+      <label for="ea-name">Name</label>
+      <input type="text" id="ea-name" name="name" class="wl-input" placeholder="Your name" required />
+    </div>
+    <div class="wl-field">
+      <label for="ea-email">Email</label>
+      <input type="email" id="ea-email" name="email" class="wl-input" placeholder="your@email.com" required />
+    </div>
+    <div class="wl-field">
+      <label for="ea-why">What would you use PC Brain for? <span style="text-transform:none;letter-spacing:0;color:var(--dim)">(optional)</span></label>
+      <textarea id="ea-why" name="message" rows="3" class="wl-input" placeholder="A few sentences. I read these myself."></textarea>
+    </div>
+    <button type="submit" class="wl-submit">Request Early Access →</button>
+  </form>
 </section>
 
-<!-- ═══ FOOTER ════════════════════════════════════════════════════════ -->
-<footer class="footer">
-  <div>
-    <div>PC Brain &middot; pcbrain.ai</div>
-    <div>Patent pending &middot; &copy; 2026 Melchiorre Oliva</div>
+</main>
+
+
+<!-- ═══ FOOTER ═════════════════════════════════════════════════ -->
+<footer class="foot">
+  <div class="col-l">
+    <div><b>PC Brain</b> · pcbrain.ai</div>
+    <div>Patent pending · © 2026 Melchiorre Oliva</div>
   </div>
-  <div class="footer-links">
+  <nav class="lks" aria-label="Footer">
     <a href="#features">Features</a>
-    <a href="#how">How It Works</a>
-    <a href="#waitlist">Early Access</a>
-    <a href="https://pcbrain.ai/terms">Terms of Service</a>
-  </div>
-  <div class="footer-right">
-    <div>BYOK: Anthropic, OpenAI, Gemini, or local Ollama &middot; Your account, your network call, your bill. There is no PC Brain proxy.</div>
-    <div class="footer-disclaimer">PC Brain is personal productivity software. It does not constitute financial, medical, or legal advice.</div>
+    <a href="#how">How it works</a>
+    <a href="#waitlist">Early access</a>
+    <a href="/terms/">Terms of service</a>
+    <a href="/privacy/">Privacy</a>
+  </nav>
+  <div class="col-r">
+    <div class="provider">PC Brain works with Claude Sonnet, GPT, Gemini, and local models via Ollama. You bring the key.</div>
+    <div class="disc">PC Brain is personal productivity software. It does not constitute financial, medical, or legal advice.</div>
   </div>
 </footer>
 
-<script>
-/* ── Starfield (exact match from dashboard bg-starfield.js) ── */
-(function(){
-  var c=document.getElementById('starfield');
-  if(!c)return;
-  var ctx=c.getContext('2d');
-  function resize(){c.width=window.innerWidth;c.height=window.innerHeight;draw();}
-  function draw(){
-    var w=c.width,h=c.height,seed=137;
-    function sr(){seed=(seed*1664525+1013904223)&0xffffffff;return(seed>>>0)/0xffffffff;}
-    ctx.fillStyle='#080b14';ctx.fillRect(0,0,w,h);
-    var count=Math.floor(w*h/1800);
-    for(var i=0;i<count;i++){var x=sr()*w,y=sr()*h,r=sr()*0.8+0.2,a=sr()*0.4+0.15;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,'+a.toFixed(2)+')';ctx.fill();}
-    var mid=Math.floor(count/5);
-    for(var i=0;i<mid;i++){var x=sr()*w,y=sr()*h,r=sr()*1.2+0.6,a=sr()*0.35+0.25;var t=sr()>0.5?'200,220,255':'255,255,255';ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle='rgba('+t+','+a.toFixed(2)+')';ctx.fill();}
-    var bright=Math.floor(count/20);
-    for(var i=0;i<bright;i++){var x=sr()*w,y=sr()*h,r=sr()*1.5+1.0,a=sr()*0.3+0.5;var g=ctx.createRadialGradient(x,y,0,x,y,r*4);g.addColorStop(0,'rgba(180,210,255,'+(a*0.6).toFixed(2)+')');g.addColorStop(1,'rgba(0,0,0,0)');ctx.beginPath();ctx.arc(x,y,r*4,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle='rgba(220,235,255,'+a.toFixed(2)+')';ctx.fill();}
-    var n1=ctx.createRadialGradient(w*0.08,h*0.05,0,w*0.08,h*0.05,w*0.35);n1.addColorStop(0,'rgba(30,50,120,0.07)');n1.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=n1;ctx.fillRect(0,0,w,h);
-    var n2=ctx.createRadialGradient(w*0.92,h*0.08,0,w*0.92,h*0.08,w*0.3);n2.addColorStop(0,'rgba(50,20,110,0.06)');n2.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=n2;ctx.fillRect(0,0,w,h);
-  }
-  resize();
-  var rt;window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(resize,150);});
-  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){c.style.display='none';}
-})();
-
-/* ── Scroll fade-up ── */
-(function(){
-  var els=document.querySelectorAll('.fade-up');
-  if(!els.length)return;
-  var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:0.15});
-  els.forEach(function(el){obs.observe(el);});
-})();
-
-/* ── Counter animation ── */
-(function(){
-  var nums=document.querySelectorAll('.stat-num[data-target]');
-  if(!nums.length)return;
-  var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){
-    if(!e.isIntersecting)return;
-    var el=e.target,target=parseFloat(el.dataset.target),decimals=parseInt(el.dataset.decimals||'0'),prefix=el.dataset.prefix||'',suffix=el.dataset.suffix||'',start=0,dur=1200,t0=null;
-    function step(ts){if(!t0)t0=ts;var p=Math.min((ts-t0)/dur,1);var v=start+(target-start)*p;el.textContent=prefix+(decimals?v.toFixed(decimals):Math.floor(v))+suffix;if(p<1)requestAnimationFrame(step);}
-    requestAnimationFrame(step);obs.unobserve(el);
-  });},{threshold:0.5});
-  nums.forEach(function(el){obs.observe(el);});
-})();
-
-/* ── Form submission ── */
-(function(){
-  var form=document.getElementById('ea-form');
-  if(!form)return;
-  form.addEventListener('submit',function(e){
-    e.preventDefault();
-    var btn=form.querySelector('.btn-submit');
-    btn.textContent='Submitting...';btn.disabled=true;
-    fetch(form.action,{method:'POST',body:new FormData(form),headers:{'Accept':'application/json'}})
-    .then(function(r){
-      if(r.ok){form.style.display='none';document.getElementById('form-success').style.display='block';}
-      else{btn.textContent='Error — Try Again';btn.disabled=false;}
-    })
-    .catch(function(){btn.textContent='Error — Try Again';btn.disabled=false;});
-  });
-})();
-</script>
-
-<!-- ═══ EARLY ACCESS MODAL ═══════════════════════════════════════════ -->
-<div id="ea-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.85);align-items:center;justify-content:center;animation:fadeIn .2s ease" onclick="if(event.target===this)this.style.display='none'">
-  <div style="background:#0f1117;border:2px solid #ff2d55;border-radius:12px;padding:40px;max-width:480px;width:90%;position:relative;box-shadow:0 0 40px rgba(255,45,85,.3);animation:scaleIn .2s ease">
-    <button onclick="document.getElementById('ea-modal').style.display='none'" style="position:absolute;top:12px;right:16px;background:none;border:none;color:#888;font-size:24px;cursor:pointer">&times;</button>
-    <div style="text-align:center;margin-bottom:20px">
-      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ff2d55" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-    </div>
-    <h2 style="text-align:center;font-size:28px;font-weight:800;color:#fff;margin-bottom:12px">Invite-only</h2>
-    <p style="text-align:center;color:#888;font-size:16px;line-height:1.6;margin-bottom:24px">Early access while I tune it on real workloads. Apply at the form below; I review personally.</p>
-    <div style="border-top:1px solid rgba(255,45,85,.3);margin-bottom:24px"></div>
-    <a href="#waitlist" onclick="document.getElementById('ea-modal').style.display='none'" style="display:block;text-align:center;padding:14px 24px;background:linear-gradient(135deg,#ff2d55,#cc1144);color:#fff;font-size:16px;font-weight:700;border-radius:8px;text-decoration:none;margin-bottom:16px">Request Early Access &rarr;</a>
-    <p style="text-align:center;font-size:12px;color:#666">Already have a license key? Your download link was included in your welcome email.</p>
-  </div>
-</div>
-<style>@keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes scaleIn{from{transform:scale(.95);opacity:0}to{transform:scale(1);opacity:1}}</style>
+<script src="premium.js"></script>
 </body>
 </html>
