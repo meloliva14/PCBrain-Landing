@@ -29,9 +29,10 @@ p{font-size:15px;color:rgba(232,234,246,.82);margin-bottom:14px}
 footer{text-align:center;padding:40px 24px;color:rgba(107,114,128,.5);font-size:12px;border-top:1px solid var(--border);margin-top:60px}
 footer a{color:var(--cyan);font-size:12px}
 @media(max-width:600px){.container{padding:80px 16px 60px}h1{font-size:26px}h2{font-size:18px}.nav{padding:0 16px}}
-</style>
+.skip-link{position:absolute;left:-9999px;top:8px;background:#00d4ff;color:#000;padding:8px 16px;border-radius:6px;z-index:1000;font-weight:700}.skip-link:focus{left:8px}</style>
 </head>
 <body>
+<a href="#main" class="skip-link">Skip to main content</a>
   <nav class="nav">
     <a href="/" class="nav-brand">PC Brain</a>
     <div class="nav-links">
@@ -42,7 +43,7 @@ footer a{color:var(--cyan);font-size:12px}
       <a href="/">Home</a>
     </div>
   </nav>
-  <div class="container">
+  <main class="container" id="main">
     <h1>End User License Agreement</h1>
     <div class="subtitle">Effective April 15, 2026 | Version 2.0.0 | PC Brain LLC, New Jersey</div>
       <p>PC BRAIN END USER LICENSE AGREEMENT (EULA)</p>
@@ -97,7 +98,7 @@ footer a{color:var(--cyan);font-size:12px}
       <p>PC BRAIN LLC</p>
       <p>melo@pcbrain.ai</p>
       <p>https://pcbrain.ai</p>
-  </div>
+  </main>
   <footer>
     <p>&copy; 2026 PC Brain LLC, New Jersey. All rights reserved.</p>
     <p><a href="/">Home</a> &middot; <a href="/privacy">Privacy Policy</a> &middot; <a href="/eula">EULA</a> &middot; <a href="/terms">Terms</a> &middot; <a href="/refunds">Refunds</a></p>
