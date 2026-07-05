@@ -1,473 +1,911 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<meta name="color-scheme" content="dark" />
-<title>PC Brain — A local autonomous agent for solo builders.</title>
-<meta name="description" content="A local autonomous agent. Built by one founder, runs on your machine, talks to whatever LLM you bring — no proxy, no analytics ride-along." />
-<meta name="title" content="PC Brain — A local autonomous agent for solo builders." />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://pcbrain.ai" />
-<meta property="og:title" content="PC Brain — A local autonomous agent" />
-<meta property="og:description" content="Built by one founder, runs on your machine, talks to whatever LLM you bring. No PC Brain proxy in the path; you bring the key, you see the bill." />
-<meta property="og:image" content="https://pcbrain.ai/preview.png" />
-<meta property="og:image:width" content="1200" />
-<meta property="og:image:height" content="630" />
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:url" content="https://pcbrain.ai" />
-<meta name="twitter:title" content="PC Brain — A local autonomous agent" />
-<meta name="twitter:description" content="Built by one founder, runs on your machine, talks to whatever LLM you bring. No PC Brain proxy in the path." />
-<meta name="twitter:image" content="https://pcbrain.ai/preview.png" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="premium.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PC Brain &mdash; A local AI civilization for Windows</title>
+<meta name="description" content="PC Brain runs on your machine, acts with 539 consent-gated verbs, and cryptographically signs every sensitive action - so it can't lie to you. Nothing leaves your machine by default.">
+<link rel="canonical" href="https://pcbrain.ai">
+<meta name="theme-color" content="#04060e">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://pcbrain.ai">
+<meta property="og:title" content="PC Brain - Yours. And it can't lie to you.">
+<meta property="og:description" content="A local AI civilization for Windows. 539 consent-gated action verbs, cryptographically signed actions, nothing leaves your machine by default.">
+<meta property="og:image" content="https://pcbrain.ai/preview.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="PC Brain - Yours. And it can't lie to you.">
+<meta name="twitter:description" content="A local AI civilization for Windows. Honesty you can verify yourself - offline.">
+<meta name="twitter:image" content="https://pcbrain.ai/preview.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-<canvas id="starfield" aria-hidden="true"></canvas>
+<style>
+  :root{
+    --bg:#04060e; --cyan:#2ee6ff; --cyan-deep:#0090d8; --violet:#8b5cff; --violet-hot:#b892ff;
+    --text:#eef3ff; --muted:#8f97b4; --faint:#7d85a6;
+    --ctrl-line:rgba(120,150,220,.6);
+    --good:#48f7ad; --bad:#ff5f7a; --amber:#ffc45e;
+    --line:rgba(120,150,220,.14);
+    --sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,'SF Mono','Consolas',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;scroll-padding-top:80px}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+  main:focus{outline:none}
+  body{background:#04060e;color:var(--text);font-family:var(--sans);-webkit-font-smoothing:antialiased;
+    overflow-x:hidden;line-height:1.6}
+  a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{
+    outline:2px solid var(--cyan);outline-offset:3px;border-radius:4px}
+  .skip{position:absolute;left:-9999px;top:0;z-index:99;background:var(--cyan);color:#04121a;
+    padding:10px 18px;font-weight:700;border-radius:0 0 10px 0}
+  .skip:focus{left:0}
 
-<!-- ═══ NAV ════════════════════════════════════════════════════ -->
-<nav class="nav" role="navigation" aria-label="Primary">
-  <div class="brand">
-    <span class="mark">PCBRAIN</span>
-    <span class="badge">Early Access</span>
+  canvas.bg{position:fixed;inset:0;width:100%;height:100%;display:block;pointer-events:none}
+  canvas#nebula{z-index:0}
+  canvas#stars{z-index:1}
+  .vignette{position:fixed;inset:0;z-index:2;pointer-events:none;
+    background:radial-gradient(135% 105% at 50% 32%,transparent 38%,rgba(2,3,9,.6) 100%)}
+  .grain{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.03;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+  /* depth instrument (right edge) */
+  .depth{position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:15;pointer-events:none;
+    font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--faint);
+    display:flex;flex-direction:column;align-items:center;gap:10px}
+  .depth .rail{width:1px;height:150px;background:rgba(120,150,220,.18);position:relative}
+  .depth .pip{position:absolute;left:-2px;width:5px;height:5px;border-radius:50%;background:var(--cyan);
+    box-shadow:0 0 8px var(--cyan);top:0}
+  .depth .sector{writing-mode:vertical-rl;text-orientation:mixed}
+  @media (max-width:900px){.depth{display:none}}
+
+  main{position:relative;z-index:3}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 28px}
+
+  .nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:center;justify-content:space-between;
+    height:62px;padding:0 30px;background:linear-gradient(180deg,rgba(4,6,14,.72),transparent);backdrop-filter:blur(3px)}
+  .brand{font-family:var(--mono);font-weight:700;font-size:16px;letter-spacing:.04em;color:#fff;display:flex;align-items:center;gap:10px}
+  .brand .dot{width:10px;height:10px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#fff,var(--cyan) 45%,var(--violet));
+    box-shadow:0 0 16px var(--cyan),0 0 30px rgba(139,92,255,.5)}
+  .navlinks{display:flex;align-items:center;gap:22px}
+  .navlinks a{font-size:13px;color:var(--muted);text-decoration:none;transition:.2s}
+  .navlinks a:hover{color:#fff}
+  .nav a.cta{font-size:13px;font-weight:700;color:#04121a;text-decoration:none;padding:9px 22px;border-radius:999px;
+    background:linear-gradient(135deg,var(--cyan),var(--cyan-deep));box-shadow:0 0 26px rgba(46,230,255,.3);transition:.25s}
+  .nav a.cta:hover{filter:brightness(1.08);box-shadow:0 0 38px rgba(46,230,255,.55);transform:translateY(-1px)}
+  @media (max-width:760px){.navlinks a:not(.cta){display:none}}
+
+  .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:120px 0 90px;position:relative}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.26em;text-transform:uppercase;color:var(--cyan);
+    margin-bottom:26px;opacity:0;transform:translateY(14px);text-shadow:0 0 20px rgba(46,230,255,.4)}
+  .kill{font-weight:500;font-size:clamp(19px,2.7vw,28px);color:var(--muted);max-width:740px;line-height:1.32;
+    margin-bottom:12px;opacity:0;transform:translateY(18px)}
+  .kill s{color:var(--faint);text-decoration-color:rgba(255,95,122,.55);text-decoration-thickness:2px}
+  h1{font-weight:800;font-size:clamp(48px,9vw,118px);line-height:.94;letter-spacing:-.025em;max-width:12ch;
+    margin-bottom:30px;opacity:0;transform:translateY(24px)}
+  h1 .grad{background:linear-gradient(115deg,#fff 0%,var(--cyan) 38%,var(--violet-hot) 88%);
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+    filter:drop-shadow(0 0 34px rgba(46,230,255,.28))}
+  .hero-sub{font-size:clamp(16px,2vw,20px);color:var(--muted);max-width:610px;margin-bottom:40px;
+    opacity:0;transform:translateY(20px)}
+  .hero-sub b{color:var(--text);font-weight:600}
+  .hero-ctas{display:flex;gap:14px;flex-wrap:wrap;align-items:center;opacity:0;transform:translateY(20px)}
+  .btn{font-size:15px;font-weight:700;text-decoration:none;padding:16px 32px;border-radius:999px;transition:.25s;cursor:pointer;border:none;
+    display:inline-block;font-family:var(--sans)}
+  .btn.primary{color:#04121a;background:linear-gradient(135deg,var(--cyan),var(--cyan-deep));box-shadow:0 0 34px rgba(46,230,255,.35)}
+  .btn.primary:hover{filter:brightness(1.08);box-shadow:0 0 48px rgba(46,230,255,.6);transform:translateY(-2px)}
+  .btn.ghost{color:var(--text);background:rgba(255,255,255,.03);border:1px solid var(--ctrl-line)}
+  .btn.ghost:hover{border-color:var(--cyan);color:#fff}
+  .hero-proof{font-family:var(--mono);font-size:12px;color:var(--faint);letter-spacing:.03em;margin-top:34px;
+    display:flex;gap:20px;flex-wrap:wrap;opacity:0}
+  .hero-proof span{display:flex;align-items:center;gap:8px}
+  .hero-proof .g{width:6px;height:6px;border-radius:50%;background:var(--good);box-shadow:0 0 9px var(--good)}
+
+  .ptxcv{position:fixed;inset:0;z-index:4;pointer-events:none}
+  body.ptx .hero.in h1{animation:rise .8s 1.25s cubic-bezier(.16,.9,.2,1) forwards}
+
+  .hero.in .eyebrow{animation:rise .7s .1s cubic-bezier(.2,.8,.2,1) forwards}
+  .hero.in .kill{animation:rise .8s .24s cubic-bezier(.2,.8,.2,1) forwards}
+  .hero.in h1{animation:rise .95s .4s cubic-bezier(.16,.9,.2,1) forwards}
+  .hero.in .hero-sub{animation:rise .8s .62s cubic-bezier(.2,.8,.2,1) forwards}
+  .hero.in .hero-ctas{animation:rise .8s .76s cubic-bezier(.2,.8,.2,1) forwards}
+  .hero.in .hero-proof{animation:fade 1.1s 1.15s forwards}
+  @keyframes rise{to{opacity:1;transform:none}}
+  @keyframes fade{to{opacity:1}}
+
+  .scrollcue{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);color:var(--faint);font-family:var(--mono);
+    font-size:10px;letter-spacing:.26em;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:10px;
+    opacity:0;animation:fade 1s 1.5s forwards}
+  .scrollcue .bar{width:1px;height:40px;background:linear-gradient(var(--cyan),transparent);animation:cue 2s infinite}
+  @keyframes cue{0%,100%{opacity:.3;transform:scaleY(.6)}50%{opacity:1;transform:scaleY(1)}}
+
+  .scene{padding:clamp(96px,15vh,168px) 0;position:relative}
+  .reveal{opacity:0;transform:translateY(46px);transition:opacity 1.05s cubic-bezier(.2,.8,.2,1),transform 1.05s cubic-bezier(.2,.8,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+  .tag{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--cyan);
+    margin-bottom:16px;text-shadow:0 0 16px rgba(46,230,255,.35)}
+  .scene h2{font-weight:800;font-size:clamp(32px,5.4vw,64px);line-height:1.0;letter-spacing:-.018em;max-width:16ch;margin-bottom:22px}
+  .scene h2 .v{color:var(--violet-hot);text-shadow:0 0 30px rgba(139,92,255,.4)}
+  .scene p.lead{font-size:clamp(17px,2vw,21px);color:var(--muted);max-width:640px;line-height:1.62}
+  .scene p.lead b{color:var(--text);font-weight:600}
+
+  .enemy{text-align:center}
+  .enemy h2{margin:0 auto 22px;max-width:22ch}
+  .enemy .strike b{color:var(--bad);font-weight:700;text-decoration:line-through;text-decoration-thickness:3px;
+    text-decoration-color:rgba(255,95,122,.45)}
+  .enemy p.lead{margin:0 auto}
+
+  .pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:58px}
+  .pillar{background:linear-gradient(180deg,rgba(20,26,46,.44),rgba(9,12,24,.34));border:1px solid var(--line);
+    border-radius:18px;padding:32px 26px;backdrop-filter:blur(8px);transition:.3s}
+  .pillar:hover{border-color:rgba(46,230,255,.4);box-shadow:0 0 46px rgba(46,230,255,.1);transform:translateY(-4px)}
+  .pillar .ic{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:18px;
+    background:radial-gradient(circle at 30% 30%,rgba(46,230,255,.28),rgba(139,92,255,.14));border:1px solid var(--line);font-size:20px}
+  .pillar h3{font-size:18px;font-weight:700;margin-bottom:10px}
+  .pillar p{font-size:14.5px;color:var(--muted);line-height:1.62}
+
+  /* -- VERBS / CAPABILITIES ------------------------------- */
+  .verbs{text-align:center}
+  .verbnum-row{display:flex;align-items:baseline;justify-content:center;gap:18px;margin:34px 0 6px;flex-wrap:wrap}
+  .verbnum{font-family:var(--mono);font-weight:700;font-size:clamp(88px,17vw,210px);line-height:.9;letter-spacing:-.03em;
+    background:linear-gradient(160deg,#fff 5%,var(--cyan) 45%,var(--violet-hot) 95%);
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+    filter:drop-shadow(0 0 44px rgba(46,230,255,.3));display:inline-block}
+  .verbnum.landed{animation:vpop .7s cubic-bezier(.2,.9,.3,1.35)}
+  @keyframes vpop{0%{transform:scale(1);filter:drop-shadow(0 0 44px rgba(46,230,255,.3))}
+    35%{transform:scale(1.07);filter:drop-shadow(0 0 90px rgba(46,230,255,.75))}
+    100%{transform:scale(1);filter:drop-shadow(0 0 44px rgba(46,230,255,.3))}}
+  .verbword{font-family:var(--mono);font-size:clamp(16px,2.4vw,26px);color:var(--muted);letter-spacing:.14em;text-transform:uppercase}
+  .verbmeta{font-family:var(--mono);font-size:12.5px;color:var(--faint);letter-spacing:.06em;margin-bottom:8px}
+  .verbmeta b{color:var(--muted);font-weight:600}
+  .risklegend{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;margin-top:14px;font-family:var(--mono);
+    font-size:11px;letter-spacing:.08em;color:var(--faint);list-style:none;padding:0}
+  .risklegend li{display:flex;align-items:center;gap:7px}
+  .risklegend i{width:8px;height:8px;border-radius:50%;display:inline-block}
+  .rg{background:var(--good);box-shadow:0 0 8px var(--good)}.ra{background:var(--amber);box-shadow:0 0 8px var(--amber)}
+  .rr{background:var(--bad);box-shadow:0 0 8px var(--bad)}.rs{background:var(--violet);box-shadow:0 0 8px var(--violet)}
+
+  .constellation{position:relative;height:520px;margin:56px auto 0;max-width:1000px}
+  .constellation svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;animation:lpulse 7s ease-in-out infinite}
+  @keyframes lpulse{0%,100%{opacity:.55}50%{opacity:1}}
+  .cnode{position:absolute;transform:translate(-50%,-50%);background:rgba(6,10,22,.72);border:1px solid var(--line);
+    color:var(--text);font-family:var(--mono);font-size:12px;letter-spacing:.02em;padding:9px 14px;border-radius:999px;
+    cursor:pointer;transition:.25s;backdrop-filter:blur(4px);white-space:nowrap;display:flex;align-items:center;gap:8px}
+  .cnode .st{width:7px;height:7px;border-radius:50%;background:#dfeaff;box-shadow:0 0 10px rgba(200,230,255,.9);flex:none;
+    animation:ctw 3s infinite}
+  .cnode .ct{color:var(--faint)}
+  .cnode:hover,.cnode.active{border-color:var(--cyan);box-shadow:0 0 26px rgba(46,230,255,.25);color:#fff;
+    transform:translate(-50%,-50%) scale(1.07)}
+  .cnode:hover,.cnode:focus,.cnode.active{z-index:5}
+  .cnode.active .st{background:var(--cyan);box-shadow:0 0 14px var(--cyan)}
+  @keyframes ctw{0%,100%{opacity:1}50%{opacity:.45}}
+  .cdetail{margin:26px auto 0;max-width:660px;min-height:72px;border:1px solid var(--line);border-radius:14px;
+    padding:16px 22px;background:rgba(6,10,22,.6);backdrop-filter:blur(6px);text-align:left}
+  .cdetail .cd-t{font-family:var(--mono);font-size:12px;color:var(--cyan);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+  .cdetail .cd-b{font-family:var(--mono);font-size:13px;color:var(--muted);line-height:1.8}
+  @media (max-width:760px){
+    .constellation{height:auto;display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 4px}
+    .constellation svg{display:none}
+    .cnode{position:static;transform:none;white-space:normal;justify-content:flex-start}
+    .cnode:hover,.cnode.active{transform:none}
+  }
+
+  .bounds{margin:64px auto 0;max-width:720px;text-align:left;border:1px solid var(--line);border-radius:16px;
+    padding:26px 30px;background:linear-gradient(180deg,rgba(13,18,34,.5),rgba(6,9,18,.5))}
+  .bounds h3{font-family:var(--mono);font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--good);margin-bottom:14px}
+  .bounds ul{list-style:none}
+  .bounds li{font-size:15px;color:var(--muted);padding:7px 0;display:flex;gap:12px;line-height:1.5}
+  .bounds li::before{content:"\2014";color:var(--good);font-family:var(--mono);flex:none}
+  .bounds li b{color:var(--text);font-weight:600}
+
+  /* -- PROVE ---------------------------------------------- */
+  .prove-card{border:1px solid var(--line);border-radius:22px;overflow:hidden;margin-top:54px;
+    background:linear-gradient(180deg,rgba(13,18,34,.74),rgba(6,9,18,.74));backdrop-filter:blur(12px);
+    box-shadow:0 0 70px rgba(46,230,255,.08),0 32px 100px rgba(0,0,0,.55)}
+  .prove-head{display:flex;align-items:center;gap:12px;padding:16px 22px;border-bottom:1px solid var(--line)}
+  .prove-head .live{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--good);
+    display:flex;align-items:center;gap:8px}
+  .prove-head .live .b{width:7px;height:7px;border-radius:50%;background:var(--good);box-shadow:0 0 11px var(--good);animation:pulse 1.6s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  .prove-head .ttl{font-family:var(--mono);font-size:12px;color:var(--muted);margin-left:auto}
+  .prove-body{padding:24px}
+  .receipt{font-family:var(--mono);font-size:12.5px;line-height:1.85;color:var(--muted);background:rgba(0,0,0,.4);
+    border:1px solid var(--line);border-radius:12px;padding:17px 19px;white-space:pre-wrap;word-break:break-word;transition:border-color .3s}
+  .receipt .k{color:var(--faint)}.receipt .val{color:var(--text)}.receipt .sig{color:var(--cyan)}
+  .receipt.tampered{border-color:rgba(255,95,122,.5)}.receipt.tampered .sig{color:var(--bad)}
+  .verdict{display:flex;align-items:center;gap:12px;margin:18px 0 6px;min-height:32px;font-family:var(--mono);font-size:14px;font-weight:600}
+  .verdict .badge{display:inline-flex;align-items:center;gap:8px;padding:7px 15px;border-radius:999px;font-size:12.5px;transition:.3s}
+  .verdict .badge.ok{color:var(--good);background:rgba(72,247,173,.1);border:1px solid rgba(72,247,173,.4)}
+  .verdict .badge.bad{color:var(--bad);background:rgba(255,95,122,.1);border:1px solid rgba(255,95,122,.4)}
+  .verdict .badge.idle{color:var(--faint);border:1px solid var(--line)}
+  .prove-ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
+  .pbtn{font-size:13.5px;font-weight:700;padding:12px 21px;border-radius:10px;cursor:pointer;border:1px solid var(--ctrl-line);
+    background:rgba(255,255,255,.03);color:var(--text);transition:.2s;font-family:var(--sans)}
+  .pbtn:hover{border-color:var(--cyan);color:#fff}
+  .pbtn.tamper:hover{border-color:var(--bad)}.pbtn:disabled{opacity:.4;cursor:default}
+  .prove-note{font-size:13px;color:var(--faint);margin-top:17px;line-height:1.62}.prove-note b{color:var(--muted)}
+
+  /* -- THE MOATS ------------------------------------------ */
+  .moats-scene .tag{color:var(--violet-hot);text-shadow:0 0 16px rgba(139,92,255,.4)}
+  .moats-title{font-weight:800;font-size:clamp(56px,11vw,148px);line-height:.92;letter-spacing:-.03em;margin-bottom:26px}
+  .moats-title .v{background:linear-gradient(115deg,var(--violet-hot),var(--cyan));-webkit-background-clip:text;
+    background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 40px rgba(139,92,255,.35))}
+  .moatlist{margin-top:64px;display:flex;flex-direction:column;gap:26px}
+  .moat{display:grid;grid-template-columns:150px 1fr;gap:26px;align-items:start;
+    border:1px solid var(--line);border-left:3px solid rgba(139,92,255,.5);border-radius:18px;padding:34px 36px;
+    background:linear-gradient(180deg,rgba(16,14,34,.5),rgba(7,8,20,.44));backdrop-filter:blur(8px);transition:.35s}
+  .moat:hover{border-left-color:var(--cyan);box-shadow:0 0 56px rgba(139,92,255,.14);transform:translateX(6px)}
+  .moat .mnum{font-family:var(--mono);font-weight:700;font-size:clamp(48px,6vw,84px);line-height:1;
+    background:linear-gradient(160deg,rgba(184,146,255,.9),rgba(46,230,255,.5));-webkit-background-clip:text;
+    background-clip:text;-webkit-text-fill-color:transparent;opacity:.85}
+  .moat h3{font-family:var(--mono);font-size:clamp(17px,2.2vw,23px);letter-spacing:.08em;margin-bottom:12px;color:#fff}
+  .moat p{font-size:15.5px;color:var(--muted);line-height:1.66;max-width:64ch}
+  .moat .mproof{font-family:var(--mono);font-size:12.5px;color:var(--good);margin-top:14px;line-height:1.7}
+  .moat.reveal{transition-delay:calc(var(--i)*90ms)}
+  @media (max-width:760px){.moat{grid-template-columns:1fr;gap:8px;padding:26px 22px}}
+
+  /* -- FINAL + FORM --------------------------------------- */
+  .final{text-align:center;padding:clamp(110px,18vh,200px) 0 90px}
+  .final h2{font-weight:800;font-size:clamp(38px,7vw,86px);line-height:.98;letter-spacing:-.025em;max-width:15ch;margin:0 auto 26px}
+  .final h2 .grad{background:linear-gradient(115deg,#fff,var(--cyan) 45%,var(--violet-hot));-webkit-background-clip:text;
+    background-clip:text;-webkit-text-fill-color:transparent}
+  .final p.sub{font-size:18px;color:var(--muted);max-width:560px;margin:0 auto 46px}
+  .contact{max-width:560px;margin:0 auto;text-align:left;display:flex;flex-direction:column;gap:14px}
+  .contact label{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+  .contact input[type=email],.contact textarea{width:100%;background:rgba(6,10,22,.72);border:1px solid var(--ctrl-line);
+    border-radius:12px;color:var(--text);font-family:var(--sans);font-size:15px;padding:15px 17px;transition:.25s}
+  .contact ::placeholder{color:var(--muted);opacity:1}
+  .contact input:focus,.contact textarea:focus{border-color:var(--cyan);box-shadow:0 0 24px rgba(46,230,255,.15)}
+  .contact textarea{min-height:92px;resize:vertical}
+  .contact .btn{align-self:center;margin-top:8px}
+  .contact .formnote{font-family:var(--mono);font-size:11px;color:var(--faint);text-align:center;letter-spacing:.04em}
+  .final .hero-proof{justify-content:center;opacity:1;margin-top:40px}
+
+  /* -- FOOTER --------------------------------------------- */
+  footer{border-top:1px solid var(--line);padding:56px 0 40px;position:relative;z-index:3;
+    background:linear-gradient(180deg,transparent,rgba(3,4,10,.8))}
+  .fcols{display:grid;grid-template-columns:2fr 1fr 1fr 1.4fr;gap:36px;margin-bottom:40px}
+  .fcols h2.fh{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-bottom:14px}
+  .fcols ul{list-style:none}
+  .fcols li{margin-bottom:9px}
+  .fcols a{color:var(--muted);text-decoration:none;font-size:14px;transition:.2s}
+  .fcols a:hover{color:var(--cyan)}
+  .fbrand{font-family:var(--mono);font-weight:700;font-size:16px;color:#fff;display:flex;align-items:center;gap:10px;margin-bottom:12px}
+  .fbrand .dot{width:9px;height:9px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#fff,var(--cyan) 45%,var(--violet));
+    box-shadow:0 0 14px var(--cyan)}
+  .ftext{font-size:13.5px;color:var(--muted);line-height:1.7;max-width:30ch}
+  .fmeta{font-family:var(--mono);font-size:11.5px;color:var(--faint);margin-top:14px;line-height:1.9}
+  .fbottom{border-top:1px solid var(--line);padding-top:22px;display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;
+    font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:.03em;line-height:1.8}
+  .fbottom b{color:var(--muted)}
+  @media (max-width:860px){.fcols{grid-template-columns:1fr 1fr}}
+  @media (max-width:520px){.fcols{grid-template-columns:1fr}.fbottom{flex-direction:column}}
+
+  .pausebtn{position:fixed;left:16px;bottom:14px;z-index:25;font-family:var(--mono);font-size:11px;letter-spacing:.08em;
+    color:var(--faint);background:rgba(6,10,22,.78);border:1px solid var(--ctrl-line);border-radius:999px;
+    padding:8px 15px;cursor:pointer;transition:.2s;backdrop-filter:blur(4px)}
+  .pausebtn:hover{color:var(--text);border-color:var(--cyan)}
+  body.paused *{animation-play-state:paused!important}
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+    .eyebrow,.kill,h1,.hero-sub,.hero-ctas,.hero-proof,.reveal{opacity:1!important;transform:none!important}
+    canvas.bg{display:none}
+    html{scroll-behavior:auto}
+    body{background:radial-gradient(120% 90% at 50% 28%,#151030,#04060e)}
+  }
+</style>
+
+<a class="skip" href="#main">Skip to content</a>
+<noscript><style>.eyebrow,.kill,h1,.hero-sub,.hero-ctas,.hero-proof,.reveal{opacity:1!important;transform:none!important}</style></noscript>
+<canvas id="nebula" class="bg" aria-hidden="true"></canvas>
+<canvas id="stars" class="bg" aria-hidden="true"></canvas>
+<div class="vignette" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="depth" aria-hidden="true">
+  <span id="depthPct">00</span>
+  <span class="rail"><span class="pip" id="depthPip"></span></span>
+  <span class="sector" id="depthSector">SURFACE</span>
+</div>
+
+<nav class="nav" aria-label="Main">
+  <div class="brand"><span class="dot" aria-hidden="true"></span>PC BRAIN</div>
+  <div class="navlinks">
+    <a href="#verbs">Capabilities</a>
+    <a href="#prove">Proof</a>
+    <a href="#moats">The Moats</a>
+    <a class="cta" href="#get">Early access</a>
   </div>
-  <div class="links">
-    <a href="#features">Features</a>
-    <a href="#how">How it works</a>
-    <a href="#privacy">Privacy</a>
-    <a href="#limits">Limits</a>
-  </div>
-  <a href="#waitlist" class="cta-pill">Request Access →</a>
 </nav>
 
-<main>
+<button class="pausebtn" id="pauseBtn" type="button" aria-pressed="false">Pause motion</button>
 
-<!-- ═══ HERO ═══════════════════════════════════════════════════ -->
-<section class="hero" id="main" data-screen-label="01 Hero">
-  <div class="hero-text">
-    <div class="eyebrow"><span class="dot"></span>Local · BYOK · Operator-grade</div>
-    <h1 class="hero-h1">A local autonomous agent.<br /><span class="grad">Built by one founder.</span></h1>
-    <p class="lede">I'm Mel. I built this because generic AI tools won't run on my hardware and cloud agents won't. PC Brain runs on your machine, talks to whatever LLM you bring (Anthropic, OpenAI, Gemini), and asks before any action that touches the world. No proxy in the path; you bring the key, you see the bill.</p>
-    <div class="hero-ctas">
-      <a href="#waitlist" class="btn-primary">Request Early Access →</a>
-      <a href="#how" class="btn-ghost">See how it works</a>
+<main id="main" tabindex="-1">
+  <header class="hero" id="hero">
+    <div class="wrap">
+      <div class="eyebrow">Corevana &middot; a local AI civilization for Windows</div>
+      <p class="kill">Every other AI is a <s>rental in someone else's cloud<span class="sr-only"> (crossed out)</span></s>.</p>
+      <h1>Yours. And it <span class="grad">can't lie to you.</span></h1>
+      <p class="hero-sub">PC Brain runs on <b>your</b> machine. It learns the work you actually do, it acts
+        for you &mdash; and every sensitive action it takes is <b>cryptographically signed</b>, so you can prove it
+        never did a thing it didn't tell you about.</p>
+      <div class="hero-ctas">
+        <a class="btn primary" href="#get">Bring it home</a>
+        <a class="btn ghost" href="#prove">See it prove itself <span aria-hidden="true">&darr;</span></a>
+      </div>
+      <div class="hero-proof">
+        <span><span class="g" aria-hidden="true"></span>Nothing leaves your machine by default</span>
+        <span><span class="g" aria-hidden="true"></span>539 real action verbs &mdash; consent-gated wherever it can touch your stuff</span>
+        <span><span class="g" aria-hidden="true"></span>Verify every action yourself</span>
+      </div>
     </div>
-    <div class="hero-proof">
-      <span>Patent pending</span><span>·</span>
-      <span>© 2026 Melchiorre Oliva</span><span>·</span>
-      <span>Invite-only</span>
-    </div>
-  </div>
+    <div class="scrollcue" aria-hidden="true"><span>scroll</span><span class="bar"></span></div>
+  </header>
 
-  <!-- ═══ DASHBOARD CONSOLE — THE CENTERPIECE ═══════════════════ -->
-  <div class="console-wrap">
-    <div class="console" role="img" aria-label="PC Brain command console preview">
-      <!-- Header bar -->
-      <div class="cn-head">
-        <div class="lights"><span></span><span></span><span></span></div>
-        <div class="title"><b>PCBRAIN</b> /// COMMAND CONSOLE</div>
-        <div class="ver">v2.1.0</div>
-        <div class="spacer"></div>
-        <div class="live"><span class="pulse"></span>Online</div>
+  <section class="scene enemy">
+    <div class="wrap reveal">
+      <div class="tag">the honest truth</div>
+      <h2 class="strike">They keep your brain in <b>their<span class="sr-only"> (crossed out)</span></b> data center.<br>You rent it back, one prompt at a time.</h2>
+      <p class="lead">PC Brain is the opposite bet: the model, the memory, the whole civilization of specialists
+        &mdash; <b>on your disk, under your control.</b> The only time anything leaves is the moment <b>you</b>
+        hand it a cloud key &mdash; and then only that one call goes out.</p>
+    </div>
+  </section>
+
+  <section class="scene">
+    <div class="wrap reveal">
+      <div class="tag">not an assistant</div>
+      <h2>A <span class="v">civilization</span>, not a chatbot.</h2>
+      <p class="lead">Corevana leads a crew of specialists that reason together before they act &mdash; a scout,
+        a strategist, an archivist, a critic, a sentinel. They <b>mature over years</b>: they build memory, earn
+        trust, keep their own case law. It doesn't reset every conversation. It grows into <b>your</b> AI.</p>
+      <div class="pillars">
+        <div class="pillar"><div class="ic" aria-hidden="true">&#128274;</div><h3>Local by default</h3>
+          <p>The model and your data live on your Windows machine. No telemetry, no auto-update, no data sharing &mdash; you turn cloud on only if you want it.</p></div>
+        <div class="pillar"><div class="ic" aria-hidden="true">&#129504;</div><h3>It remembers you</h3>
+          <p>Bitemporal memory that supersedes instead of forgetting. Day one, it already knows the work you were doing.</p></div>
+        <div class="pillar"><div class="ic" aria-hidden="true">&#128737;&#65039;</div><h3>It attacks itself</h3>
+          <p>An open red-team fires poison, injection and collusion at its own defenses &mdash; and signs the result. Provable, not promised.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="scene verbs" id="verbs">
+    <div class="wrap reveal">
+      <div class="tag">it doesn't chat. it acts.</div>
+      <h2 style="margin-left:auto;margin-right:auto">One brain. <span class="v">Real hands.</span></h2>
+      <p class="lead" style="margin:0 auto">Counted live from the registry that ships in the product &mdash;
+        not a marketing round-up:</p>
+      <div class="verbnum-row">
+        <span class="verbnum" id="verbnum" aria-hidden="true">0</span><span class="sr-only">539</span>
+        <span class="verbword">action verbs</span>
+      </div>
+      <p class="verbmeta">across <b>17 domains</b> &mdash; each verb carries its <b>risk class</b>, required
+        <b>consents</b>, a <b>reversibility recipe</b>, and an owner in the civilization.</p>
+      <ul class="risklegend" aria-label="Risk classes">
+        <li><i class="rg" aria-hidden="true"></i>green &mdash; free to act</li>
+        <li><i class="ra" aria-hidden="true"></i>amber &mdash; asks first</li>
+        <li><i class="rr" aria-hidden="true"></i>red &mdash; always gated</li>
+        <li><i class="rs" aria-hidden="true"></i>sealed &mdash; off until you unseal</li>
+      </ul>
+
+      <div class="constellation" id="constellation">
+        <svg id="clines" aria-hidden="true"></svg>
+        <!-- nodes injected by JS -->
+      </div>
+      <div class="cdetail" id="cdetail" aria-live="polite">
+        <div class="cd-t" id="cdT">explore a star</div>
+        <div class="cd-b" id="cdB">Each star is a capability cluster &mdash; some group two or three of the 17 registry domains. Hover, tap, or Tab to one to see real verbs from the shipping registry.</div>
       </div>
 
-      <!-- Body: rail + main -->
-      <div class="cn-body">
-        <aside class="cn-rail" aria-hidden="true">
-          <button class="ic active" title="Observatory">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-          </button>
-          <button class="ic" title="Devices">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><line x1="8" y1="22" x2="16" y2="22"/></svg>
-          </button>
-          <button class="ic" title="Decisions">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h12"/></svg>
-          </button>
-          <button class="ic" title="Capabilities">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-          </button>
-          <div class="div"></div>
-          <button class="ic" title="Settings">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.01a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.01a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-          </button>
-        </aside>
+      <div class="bounds">
+        <h3>And five hard No's, in writing</h3>
+        <ul>
+          <li>Won't <b>act on your work</b> unless you ask.</li>
+          <li>Won't <b>send your work anywhere</b> unless you ask it to use a cloud model you've connected.</li>
+          <li>Won't <b>update itself</b> unless you turn that on.</li>
+          <li>Won't <b>send telemetry</b> unless you turn that on.</li>
+          <li>Won't <b>share your projects</b> with other PC Brain users. Ever.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
 
-        <div class="cn-main">
-
-          <!-- Cognition Loop strip -->
-          <div class="cn-loop">
-            <div class="ll"><b>Cognition Loop</b> · Tick 02:14:31</div>
-            <div class="stages">
-              <div class="stage is-done">
-                <div class="ring">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                </div>
-                <div class="lab">Observe</div>
-              </div>
-              <div class="stage-edge is-flow"></div>
-              <div class="stage is-active">
-                <div class="ring">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M7 17l5-10 5 10"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2"/></svg>
-                </div>
-                <div class="lab">Orient</div>
-              </div>
-              <div class="stage-edge"></div>
-              <div class="stage">
-                <div class="ring">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M5 12l7-7 7 7"/></svg>
-                </div>
-                <div class="lab">Decide</div>
-              </div>
-            </div>
+  <section class="scene" id="prove">
+    <div class="wrap reveal">
+      <div class="tag">don't take our word &mdash; run the check</div>
+      <h2>Don't trust it. <span class="v">Verify it.</span></h2>
+      <p class="lead">Every sensitive action PC Brain takes is signed with a key on your machine. Here's a real
+        one, signed <b>live in your browser right now.</b> Check it. Then change a single character and watch the
+        proof shatter.</p>
+      <div class="prove-card">
+        <div class="prove-head">
+          <span class="live"><span class="b" aria-hidden="true"></span>live signature</span>
+          <span class="ttl" id="algo">Ed25519 &middot; in-browser</span>
+        </div>
+        <div class="prove-body">
+          <div class="receipt" id="receipt">generating a real signed receipt&hellip;</div>
+          <div class="verdict" role="status"><span class="badge idle" id="badge">awaiting your check</span>
+            <span id="vmsg" style="color:var(--faint);font-weight:400"></span></div>
+          <div class="prove-ctas">
+            <button class="pbtn" id="btnVerify" type="button">Verify the signature</button>
+            <button class="pbtn tamper" id="btnTamper" type="button">Tamper with it <span aria-hidden="true">&rarr;</span></button>
+            <button class="pbtn" id="btnReset" type="button" disabled>Re-sign a clean one</button>
           </div>
-
-          <!-- Tile: System Pulse (telemetry) -->
-          <div class="tile tile-pulse">
-            <div class="tile-head">
-              <span class="name">System Pulse</span>
-              <span class="status s-online"><span class="d"></span>Nominal</span>
-            </div>
-            <svg class="spark" viewBox="0 0 200 60" preserveAspectRatio="none" width="100%" height="60" aria-hidden="true">
-              <defs>
-                <linearGradient id="sparkG" x1="0" x2="0" y1="0" y2="1">
-                  <stop offset="0%" stop-color="#00d4ff" stop-opacity="0.45"/>
-                  <stop offset="100%" stop-color="#00d4ff" stop-opacity="0"/>
-                </linearGradient>
-              </defs>
-              <path d="M0,40 L20,38 L36,32 L48,42 L60,30 L72,34 L88,22 L100,28 L112,18 L128,30 L144,24 L160,36 L176,28 L188,34 L200,30 L200,60 L0,60 Z" fill="url(#sparkG)"/>
-              <path d="M0,40 L20,38 L36,32 L48,42 L60,30 L72,34 L88,22 L100,28 L112,18 L128,30 L144,24 L160,36 L176,28 L188,34 L200,30" fill="none" stroke="#00d4ff" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
-              <circle cx="200" cy="30" r="3" fill="#00d4ff">
-                <animate attributeName="r" values="3;5;3" dur="1.8s" repeatCount="indefinite"/>
-                <animate attributeName="opacity" values="1;0.4;1" dur="1.8s" repeatCount="indefinite"/>
-              </circle>
-            </svg>
-            <div class="lab2">Stable · last tick 02:14</div>
-          </div>
-
-          <!-- Tile: Device Mesh -->
-          <div class="tile tile-devices">
-            <div class="tile-head">
-              <span class="name">Device Mesh</span>
-              <span class="status s-online"><span class="d"></span>Linked</span>
-            </div>
-            <div class="list">
-              <div class="row s-online"><span class="dot"></span><span class="nm">Home Assistant</span><span class="meta">Hub</span></div>
-              <div class="row s-online"><span class="dot"></span><span class="nm">Philips Hue Bridge</span><span class="meta">Light</span></div>
-              <div class="row s-busy"><span class="dot"></span><span class="nm">Bambu Carbon X1</span><span class="meta">Printing</span></div>
-              <div class="row s-online"><span class="dot"></span><span class="nm">AC Infinity</span><span class="meta">Climate</span></div>
-              <div class="row s-online"><span class="dot"></span><span class="nm">Kasa Smart Strip</span><span class="meta">Power</span></div>
-            </div>
-          </div>
-
-          <!-- Tile: Decision Log (plain-English) -->
-          <div class="tile tile-log">
-            <div class="tile-head">
-              <span class="name">Decision Log</span>
-              <span class="status s-online"><span class="d"></span>Live</span>
-            </div>
-            <div class="feed">
-              <div class="e"><span class="t">02:14</span><span class="tag tag-obs">OBS</span><span class="msg">Reviewed inbox. Nothing actionable right now.</span></div>
-              <div class="e"><span class="t">02:11</span><span class="tag tag-ask">ASK</span><span class="msg">Asked to draft a vendor email. You approved.</span></div>
-              <div class="e"><span class="t">02:07</span><span class="tag tag-skp">SKP</span><span class="msg">Skipped: not enough context to proceed.</span></div>
-              <div class="e"><span class="t">02:03</span><span class="tag tag-act">ACT</span><span class="msg">Sync to printer complete; print queued.</span></div>
-              <div class="e"><span class="t">01:58</span><span class="tag tag-obs">OBS</span><span class="msg">Reviewing today's calendar.</span></div>
-              <div class="e"><span class="t">01:48</span><span class="tag tag-ok">OK</span><span class="msg">Standing by.</span></div>
-            </div>
-          </div>
-
-          <!-- Bottom row: Action gate (left) + Idle state (right) -->
-          <div class="cn-bot">
-            <div class="gate">
-              <div class="gate-head">
-                <span class="pill">Action Gate</span>
-                <span class="name">Awaiting your approval</span>
-                <span class="spacer"></span>
-                <span class="req">REQ-0412</span>
-              </div>
-              <div class="gate-prompt">
-                Send the drafted email to <b>vendor (external)</b> about the shipping delay?
-              </div>
-              <div class="gate-detail">
-                <span class="lab">Draft preview · written in your tone</span>
-                "Hi — checking in on the late shipment. I've held off on reordering until I hear back. Let me know what makes sense from your side. — Mel"
-              </div>
-              <div class="gate-actions">
-                <button class="gate-btn deny">Deny</button>
-                <button class="gate-btn modify">Modify</button>
-                <button class="gate-btn allow">Approve</button>
-              </div>
-              <div class="gate-foot">
-                <span>Risk class</span>
-                <span class="cls green">Green</span>
-                <span class="cls amber">Amber</span>
-                <span class="cls red">Red</span>
-                <span class="cls sealed">Sealed</span>
-              </div>
-            </div>
-
-            <div class="idle">
-              <div class="idle-head">
-                <span class="name">Standing By</span>
-              </div>
-              <div class="idle-orb"><div class="core"></div></div>
-              <div class="idle-msg">Nothing to report.</div>
-              <div class="idle-foot">Last activity 01:48</div>
-            </div>
-          </div>
-
-        </div><!-- /.cn-main -->
-      </div><!-- /.cn-body -->
-    </div><!-- /.console -->
-  </div><!-- /.console-wrap -->
-</section>
-
-
-<!-- ═══ FEATURES ═══════════════════════════════════════════════ -->
-<section id="features" data-screen-label="02 Features">
-  <div class="sec-head">
-    <div class="eyebrow"><span class="dot"></span>What it does today</div>
-    <h2 class="sec-title">The agent layer, honestly described.</h2>
-  </div>
-
-  <div class="f-grid">
-    <article class="f-card">
-      <div class="ic">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20M2 12h20"/></svg>
+          <p class="prove-note"><b>What just happened:</b> your browser generated a key, signed the action, and
+            verified it &mdash; with zero network. Change one byte and the signature fails, every time. On your
+            machine PC Brain goes further: every action lands in an <b>append-only ledger</b> &mdash; SQLite
+            triggers reject silent rewrites at the engine level, and the security audit log rejects deletes
+            too &mdash; and you can run it with <b>--trace-network</b> to watch, yourself, that nothing leaves.
+            This is how it becomes <b>impossible to narrate an action it didn't take.</b></p>
+        </div>
       </div>
-      <h3>Always there, never noisy</h3>
-      <p>It keeps an eye on the things you've okayed — your projects, your to-dos. When something's worth your attention, it speaks up. When nothing is, it stays quiet. No busywork, no fake 'look how busy I am' updates.</p>
-    </article>
-
-    <article class="f-card">
-      <div class="ic violet">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-      </div>
-      <h3>Hundreds of skills, all on a leash</h3>
-      <p>PC Brain can do hundreds of different things across 17 corners of your digital life. Every one is graded by how risky it is, and anything that touches the real world stops and asks you first. It's not 434 finished tricks — it's 434 fenced-in moves it can reach for, only when you say go.</p>
-    </article>
-
-    <article class="f-card">
-      <div class="ic">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="18" r="3"/><line x1="6" y1="9" x2="6" y2="15"/><line x1="18" y1="9" x2="18" y2="15"/><line x1="9" y1="6" x2="15" y2="6"/><line x1="9" y1="18" x2="15" y2="18"/></svg>
-      </div>
-      <h3>Use all your computers as one</h3>
-      <p>Got more than one machine? Flip it on and PC Brain spreads the work across them over your own private network. Only have one? You'll never even see this — it stays out of the way until you add another.</p>
-    </article>
-
-    <article class="f-card">
-      <div class="ic amber">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-      </div>
-      <h3>Talks to your real stuff</h3>
-      <p>Lights, plugs, cameras, climate gear, even your 3D printer. PC Brain already speaks the big names — Home Assistant, Philips Hue, SmartThings, Matter, HomeKit, Ring, Govee, Kasa, Tuya, Alexa, Google Home, LG ThinQ, AC Infinity, Blink. Got something off the beaten path? It can usually reach that too.</p>
-    </article>
-
-    <article class="f-card">
-      <div class="ic">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-      </div>
-      <h3>Put your idle computer to work</h3>
-      <p>When your machine is just sitting there, PC Brain can rent out its spare power and earn you a little money. It shows you the honest math — what you made, the fees, the electricity, the wear — never just the rosy number. You preview every rental before anything actually happens.</p>
-    </article>
-
-    <article class="f-card">
-      <div class="ic violet">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 7h18M3 12h18M3 17h12"/></svg>
-      </div>
-      <h3>It sounds like you, not a robot</h3>
-      <p>Point it at your writing and it helps without steamrolling your voice — it quotes you back to yourself instead of turning everything into marketing mush. Everything it's done is right there in plain English, ready to read back anytime.</p>
-    </article>
-  </div>
-
-  <div class="consent">
-    <b>Consent floor.</b> On first run I show you exactly what I'm about to watch — calendar, tasks, recent activity, devices you've connected — and you check the boxes. Anything you don't check, I never read. No background ticking until you've turned the watch surfaces on, one at a time.
-  </div>
-</section>
-
-
-<!-- ═══ HOW IT WORKS ═══════════════════════════════════════════ -->
-<section id="how" data-screen-label="03 How it works">
-  <div class="sec-head">
-    <div class="eyebrow"><span class="dot"></span>Under the hood</div>
-    <h2 class="sec-title">Built different by design.</h2>
-  </div>
-
-  <div class="h-steps">
-    <div class="h-step">
-      <div class="num">01</div>
-      <div class="ring">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-      </div>
-      <h4>Observe</h4>
-      <p>The agent reads your goals, active tasks, smart home state, finances, and episodic memory on every tick.</p>
     </div>
-    <div class="h-step">
-      <div class="num">02</div>
-      <div class="ring">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="5 12 12 5 19 12"/><line x1="5" y1="19" x2="19" y2="19"/></svg>
+  </section>
+
+  <section class="scene moats-scene" id="moats">
+    <div class="wrap">
+      <div class="reveal">
+        <div class="tag">loud and proud</div>
+        <h2 class="moats-title">THE <span class="v">MOATS</span></h2>
+        <p class="lead">We use the word on purpose. A moat is ground a rival can't cross by shipping a lookalike
+          next quarter &mdash; and every one below is <b>dug into shipped code</b>, running on your Windows machine,
+          checkable by the meanest skeptic you can find. <b>Offline.</b></p>
       </div>
-      <h4>Decide</h4>
-      <p>A governed reasoning chain — Observe, Prioritize, Hypothesize, Govern, Decide — produces structured JSON actions.</p>
-    </div>
-    <div class="h-step">
-      <div class="num">03</div>
-      <div class="ring">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      <div class="moatlist">
+        <article class="moat reveal" style="--i:0">
+          <div class="mnum" aria-hidden="true">01</div>
+          <div><h3>IT CANNOT LIE</h3>
+            <p>Corevana cannot narrate an action it did not take. If the action didn't happen, the words never
+              render &mdash; the honesty gate is enforced in code, fail-closed to silence, inside a one-click
+              Windows product.</p>
+            <p class="mproof">Proof: verify a portable proof bundle with zero network, take a swing at the standing
+              &ldquo;make it lie&rdquo; bounty, or read the red-team report where it attacks its own defenses and
+              signs the result.</p></div>
+        </article>
+        <article class="moat reveal" style="--i:1">
+          <div class="mnum" aria-hidden="true">02</div>
+          <div><h3>RECEIPTS BUILT LIKE EVIDENCE</h3>
+            <p>Every sensitive action leaves a receipt co-signed by <b>two independent keys</b> &mdash; forging one
+              means stealing both private keys, not sweet-talking a chatbot. And the receipts speak the world's
+              proof languages: RFC&nbsp;8785 canonical JSON, W3C Verifiable Credentials, OpenTelemetry spans.</p>
+            <p class="mproof">Proof: check both signatures with standard offline tooling &mdash; no account, no
+              server, no network connection required.</p></div>
+        </article>
+        <article class="moat reveal" style="--i:2">
+          <div class="mnum" aria-hidden="true">03</div>
+          <div><h3>BLAME BY REPLAY</h3>
+            <p>When something goes sideways, Corevana doesn't skim a transcript and guess. It replays the run from
+              deterministic checkpoints and proves which agent did what &mdash; attribution as mathematics, not vibes.</p>
+            <p class="mproof">Proof: run the same replay from the same checkpoints yourself and watch the identical
+              verdict fall out.</p></div>
+        </article>
+        <article class="moat reveal" style="--i:3">
+          <div class="mnum" aria-hidden="true">04</div>
+          <div><h3>NOTHING LEAVES BY DEFAULT</h3>
+            <p>Coordination, memory, voice, screen-sense, local inference &mdash; all behind a default-deny egress
+              floor on your machine. Cloud is opt-in, per key you bring, and only that single call ever goes out.</p>
+            <p class="mproof">Proof: pull the network cable and it keeps working; watch your own firewall log stay
+              silent until the moment you opt a key in.</p></div>
+        </article>
+        <article class="moat reveal" style="--i:4">
+          <div class="mnum" aria-hidden="true">05</div>
+          <div><h3>MEMORY HAS A BORDER</h3>
+            <p>Your agents' memory is a signed security boundary, not a suggestion box. Every write is
+              origin-signed, and unsigned or spoofed writes get dropped live &mdash; nobody plants thoughts in your
+              civilization's head.</p>
+            <p class="mproof">Proof: fire a spoofed memory write at it and watch it bounce; every accepted write
+              carries an origin signature you can check.</p></div>
+        </article>
+        <article class="moat reveal" style="--i:5">
+          <div class="mnum" aria-hidden="true">06</div>
+          <div><h3>AGENTS THAT GROW OLD</h3>
+            <p>Your specialists mature over years: signed DNA version chains, bitemporal trust, case law drawn from
+              their own history, onboarding gates for rookies, retirement that hands insight to the next generation.
+              You can't copy a decade &mdash; you have to live it.</p>
+            <p class="mproof">Proof: every DNA version is a signed link in a chain &mdash; walk it offline from birth
+              to today and verify each step.</p></div>
+        </article>
       </div>
-      <h4>Execute</h4>
-      <p>Approved actions run. Files move. Tasks update. Devices respond. Everything is logged to your local database.</p>
     </div>
-  </div>
-</section>
+  </section>
 
-
-<!-- ═══ VERIFIED NUMBERS (replaces old Stats) ══════════════════ -->
-<section id="verified" data-screen-label="04 Verified numbers">
-  <div class="sec-head">
-    <div class="eyebrow"><span class="dot"></span>What's actually shipped</div>
-    <h2 class="sec-title">Verified numbers only.</h2>
-    <p class="sec-sub">Everything below is countable on the install you'd receive. Anything we're not sure of lives under Honest limits, not here.</p>
-  </div>
-
-  <div class="verified-strip">
-    <div class="spec">
-      <div class="v">434</div>
-      <div class="l">Verbs · capability registry</div>
-    </div>
-    <div class="spec">
-      <div class="v">17</div>
-      <div class="l">Domains · risk-classed &amp; gated</div>
-    </div>
-    <div class="spec">
-      <div class="v">100<small>%</small></div>
-      <div class="l">Yours. Always.</div>
-    </div>
-    <div class="spec">
-      <div class="v">v2.1.0</div>
-      <div class="l">Early access. Now.</div>
-    </div>
-  </div>
-</section>
-
-
-<!-- ═══ PRIVACY / WHAT YOU CAN VERIFY ══════════════════════════ -->
-<section id="privacy" data-screen-label="05 What you can verify">
-  <div class="sec-head">
-    <div class="eyebrow"><span class="dot"></span>What you can verify</div>
-    <h2 class="sec-title">Things you can confirm yourself.</h2>
-    <p class="sec-sub">No marketing claims. Things you can confirm on your machine, with the install you have in front of you.</p>
-  </div>
-
-  <div class="verify-grid">
-    <article class="verify-card">
-      <div class="ic">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+  <section class="scene final" id="get">
+    <div class="wrap reveal">
+      <div class="tag">bring it home</div>
+      <h2>Stop <span class="grad">renting your mind.</span></h2>
+      <p class="sub">An AI civilization that lives on your machine, grows into you over years, and can prove every
+        word it says. Early access is open &mdash; tell us where to reach you.</p>
+      <form class="contact" action="https://formspree.io/f/xojyaqal" method="POST">
+        <input type="hidden" name="_subject" value="pcbrain.ai &mdash; early access request">
+        <input type="hidden" name="_next" value="https://pcbrain.ai/thanks.html">
+        <label for="cf-email">Your email</label>
+        <input id="cf-email" type="email" name="email" required autocomplete="email" placeholder="you@example.com">
+        <label for="cf-msg">What should it do for you first? <span style="text-transform:none;letter-spacing:0">(optional)</span></label>
+        <textarea id="cf-msg" name="message" placeholder="The job you'd hand it on day one&hellip;"></textarea>
+        <input type="text" name="_gotcha" style="display:none" tabindex="-1" aria-hidden="true">
+        <button class="btn primary" type="submit">Claim early access</button>
+        <p class="formnote">goes straight to the founder &mdash; no list-selling, ever</p>
+      </form>
+      <div class="hero-proof">
+        <span><span class="g" aria-hidden="true"></span>Windows &middot; local-first</span>
+        <span><span class="g" aria-hidden="true"></span>Your keys, your data</span>
+        <span><span class="g" aria-hidden="true"></span>Honesty you can check</span>
       </div>
-      <h3>Trace every byte</h3>
-      <p><code>pcbrain --trace-network</code> logs every outbound HTTP call. Inference goes to the LLM provider whose key you configured. License-key activation hits api.pcbrain.ai once at install. Auto-update background checker polls every 4 hours by default (override or disable in Settings). Telemetry / heartbeat / panic-upload all opt-in, default OFF.</p>
-    </article>
-
-    <article class="verify-card">
-      <div class="ic">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"/></svg>
-      </div>
-      <h3>Local memory you own</h3>
-      <p><code>brain.db</code> is yours. Append-only audit log: <code>id, made_at, decision_type, rationale, outcome_summary, outcome_evidence_json</code>. Query with <code>sqlite3 brain.db</code> or via <code>/api/decisions</code>. 90-day default retention; user-configurable.</p>
-    </article>
-
-    <article class="verify-card">
-      <div class="ic">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-      </div>
-      <h3>BYOK + privacy by construction</h3>
-      <p>You bring the key (Anthropic / OpenAI / Gemini), you see the bill, you can rotate or revoke whenever. Provider switch in Settings, no restart. GDPR + CCPA compliant by construction — PC Brain has no data because it never receives any. License key is the only thing on the company servers.</p>
-    </article>
-  </div>
-</section>
-
-
-<!-- ═══ HONEST LIMITS ══════════════════════════════════════════ -->
-<section id="limits" data-screen-label="06 Honest limits">
-  <div class="sec-head">
-    <div class="eyebrow"><span class="dot"></span>Honest limits</div>
-    <h2 class="sec-title">What it isn't.</h2>
-    <p class="sec-sub">Things the limits section says aren't shipped. If you need any of these today, this isn't ready for you yet — say so when you apply.</p>
-  </div>
-
-  <div class="limits-grid">
-    <article class="limit">
-      <h3>Windows-first</h3>
-      <p>That's where I built it. macOS / Linux on the path; not shipped. If your fleet is Linux NUCs, Pis, or macOS, you cannot run this today — apply anyway and I'll add you to the cross-platform beta when it ships (target Q3 2026).</p>
-    </article>
-
-    <article class="limit">
-      <h3>Closed binary today</h3>
-      <p>Patent prosecution. Reproducible build + SBOM is the verifiability path right now; not a substitute for source. Source-access for license holders on the path; full public source after the patent grants. License terms include a source-escrow trigger if the company stops shipping.</p>
-    </article>
-
-    <article class="limit">
-      <h3>Doesn't ship a model</h3>
-      <p>Inference quality is bounded by the LLM you bring. PC Brain doesn't ship a model. Ollama integration is shipped — point PC Brain at a running Ollama daemon for fully local inference. You install Ollama and choose the model.</p>
-    </article>
-
-    <article class="limit">
-      <h3>Single-developer build</h3>
-      <p>One founder shipping under deadline. The roadmap moves at one person's velocity, not a team's — features land when they're ready, not when they're announced. Smart-home depth today: MQTT directly (Bambu wired in as the first concrete adapter), plus REST adapters for anything that exposes an HTTP endpoint. Z-Wave is on the roadmap, not shipped.</p>
-    </article>
-  </div>
-</section>
-
-
-<!-- ═══ WAITLIST ═══════════════════════════════════════════════ -->
-<section id="waitlist" data-screen-label="07 Waitlist">
-  <div class="sec-head">
-    <div class="eyebrow"><span class="dot"></span>Early access</div>
-    <h2 class="sec-title">Apply.</h2>
-    <p class="sec-sub">Invite-only while I tune it on real workloads. Apply if anything above sounds like you. I review applications personally; you'll hear from me at <a href="mailto:melo@pcbrain.ai">melo@pcbrain.ai</a> if I think it's a fit. If you need something the limits section says isn't shipped, say so — I'd rather know than waste your time.</p>
-  </div>
-
-  <form class="wl" id="ea-form" action="https://formspree.io/f/xojyaqal" method="POST">
-    <input type="hidden" name="_next" value="https://pcbrain.ai/thanks.html" />
-    <div class="wl-field">
-      <label for="ea-name">Name</label>
-      <input type="text" id="ea-name" name="name" class="wl-input" placeholder="Your name" required />
     </div>
-    <div class="wl-field">
-      <label for="ea-email">Email</label>
-      <input type="email" id="ea-email" name="email" class="wl-input" placeholder="your@email.com" required />
-    </div>
-    <div class="wl-field">
-      <label for="ea-why">What would you use PC Brain for? <span style="text-transform:none;letter-spacing:0;color:var(--dim)">(optional)</span></label>
-      <textarea id="ea-why" name="message" rows="3" class="wl-input" placeholder="A few sentences. I read these myself."></textarea>
-    </div>
-    <button type="submit" class="wl-submit">Request Early Access →</button>
-  </form>
-</section>
-
+  </section>
 </main>
 
-
-<!-- ═══ FOOTER ═════════════════════════════════════════════════ -->
-<footer class="foot">
-  <div class="col-l">
-    <div><b>PC Brain</b> · pcbrain.ai</div>
-    <div>Patent pending · © 2026 Melchiorre Oliva</div>
-  </div>
-  <nav class="lks" aria-label="Footer">
-    <a href="#features">Features</a>
-    <a href="#how">How it works</a>
-    <a href="#waitlist">Early access</a>
-    <a href="/terms/">Terms of service</a>
-    <a href="/privacy/">Privacy</a>
-  </nav>
-  <div class="col-r">
-    <div class="provider">PC Brain works with Claude Sonnet, GPT, Gemini, and local models via Ollama. You bring the key.</div>
-    <div class="disc">PC Brain is personal productivity software. It does not constitute financial, medical, or legal advice.</div>
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div>
+        <div class="fbrand"><span class="dot" aria-hidden="true"></span>PC BRAIN</div>
+        <p class="ftext">A local AI civilization for Windows. Yours &mdash; and it can prove it.</p>
+        <p class="fmeta">Patent pending<br>&copy; 2026 Melchiorre Oliva</p>
+      </div>
+      <div>
+        <h2 class="fh">Product</h2>
+        <ul>
+          <li><a href="#verbs">Capabilities</a></li>
+          <li><a href="#prove">Prove it</a></li>
+          <li><a href="#moats">The Moats</a></li>
+          <li><a href="#get">Early access</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="fh">Legal &amp; rights</h2>
+        <ul>
+          <li><a href="https://pcbrain.ai/terms/">Terms of service</a></li>
+          <li><a href="https://pcbrain.ai/privacy/">Privacy policy</a></li>
+          <li><a href="https://pcbrain.ai/eula/">EULA</a></li>
+          <li><a href="https://pcbrain.ai/refunds/">Refund policy</a></li>
+          <li><a href="https://pcbrain.ai/accessibility/">Accessibility</a></li>
+          <li><a href="https://pcbrain.ai/privacy/">Your data rights</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="fh">Contact</h2>
+        <ul><li><a href="mailto:melo@pcbrain.ai">melo@pcbrain.ai</a></li></ul>
+        <p class="fmeta">PC Brain works with Claude, GPT, Gemini, and local models via Ollama.
+          You bring the key &mdash; you see the bill.</p>
+      </div>
+    </div>
+    <div class="fbottom">
+      <span>Sold by <b>PC BRAIN LLC</b> (New Jersey) &middot; Support <a href="mailto:melo@pcbrain.ai" style="color:var(--muted)">melo@pcbrain.ai</a></span>
+      <span>PC Brain is personal productivity software. It does not constitute financial, medical, or legal advice.</span>
+    </div>
   </div>
 </footer>
 
-<script src="premium.js"></script>
+<script>
+(function(){
+  "use strict";
+  var mq = window.matchMedia ? matchMedia("(prefers-reduced-motion:reduce)") : null;
+  var reduce = mq ? mq.matches : false;
+  if(mq && mq.addEventListener) mq.addEventListener("change",function(e){ reduce=e.matches; });
+  var paused = false;
+  try{ paused = localStorage.getItem("pcb-motion")==="paused"; }catch(e){}
+  var W=innerWidth, H=innerHeight, scrollN=0, scrollT=0, mX=.5, mY=.5, tmX=.5, tmY=.5;
+
+  addEventListener("scroll",function(){ var h=document.body.scrollHeight-innerHeight;
+    scrollT = h>0?Math.min(1,Math.max(0,scrollY/h)):0; },{passive:true});
+  addEventListener("mousemove",function(e){ tmX=e.clientX/innerWidth; tmY=e.clientY/innerHeight; },{passive:true});
+
+  /* ========== LAYER 1 \u2014 soft WebGL nebula (low-res, cheap) ========== */
+  var neb=document.getElementById("nebula"), gl=neb.getContext("webgl",{alpha:false,antialias:false});
+  var prog,uRes,uT,uS,uM,glOk=!!gl;
+  var VERT="attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}";
+  var FRAG=[
+   "precision mediump float;uniform vec2 u_res;uniform float u_t;uniform float u_s;uniform vec2 u_m;uniform float u_d;",
+   "float h(vec2 p){p=fract(p*vec2(123.34,456.21));p+=dot(p,p+45.32);return fract(p.x*p.y);}",
+   "float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);float a=h(i),b=h(i+vec2(1,0)),c=h(i+vec2(0,1)),d=h(i+vec2(1,1));return mix(mix(a,b,f.x),mix(c,d,f.x),f.y);}",
+   "float fbm(vec2 p){float v=0.,a=.5;mat2 m=mat2(1.6,1.2,-1.2,1.6);for(int i=0;i<5;i++){v+=a*n(p);p=m*p;a*=.5;}return v;}",
+   "void main(){vec2 uv=(gl_FragCoord.xy-.5*u_res)/u_res.y;",
+   "float t=u_t*.025*(1.+u_d*.9);float dep=u_s*1.1;",
+   "vec2 q=uv*1.2*(1.+u_d*.32)+vec2(t,-t*.55)+vec2(0.,dep*.55)+(u_m-.5)*.25;",
+   "float f1=fbm(q*1.5+.6*n(q+t));float f2=fbm(q*3.1-t*.8);",
+   "vec3 deep=vec3(.015,.02,.06);vec3 cyan=vec3(.15,.85,1.);vec3 viol=vec3(.55,.36,1.);",
+   "vec3 col=deep;",
+   "col+=viol*pow(smoothstep(.28,1.,f1),1.6)*(.7+u_d*.45);",
+   "col+=cyan*pow(smoothstep(.45,1.,f2),2.3)*.5;",
+   "float gy=.2-u_s*1.0;float gd=length(uv-vec2(0.,gy));col+=mix(cyan,viol,.5)*exp(-7.*gd*gd)*.42;",
+   "vec2 uvm=vec2((u_m.x-.5)*u_res.x/u_res.y,(.5-u_m.y));",
+   "float mdd=length(uv-uvm);col+=mix(cyan,viol,.4)*exp(-8.*mdd*mdd)*.2;",
+   "col*=1.-(.28+u_d*.16)*dot(uv,uv);col=pow(col,vec3(.9));",
+   "gl_FragColor=vec4(col,1.);}"].join("\n");
+  function sh(t,s){var o=gl.createShader(t);gl.shaderSource(o,s);gl.compileShader(o);
+    return gl.getShaderParameter(o,gl.COMPILE_STATUS)?o:null;}
+  function initNeb(){ if(!glOk)return false;
+    var v=sh(gl.VERTEX_SHADER,VERT),f=sh(gl.FRAGMENT_SHADER,FRAG); if(!v||!f)return false;
+    prog=gl.createProgram();gl.attachShader(prog,v);gl.attachShader(prog,f);gl.linkProgram(prog);
+    if(!gl.getProgramParameter(prog,gl.LINK_STATUS))return false; gl.useProgram(prog);
+    var b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);
+    gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+    var l=gl.getAttribLocation(prog,"p");gl.enableVertexAttribArray(l);gl.vertexAttribPointer(l,2,gl.FLOAT,false,0,0);
+    uRes=gl.getUniformLocation(prog,"u_res");uT=gl.getUniformLocation(prog,"u_t");
+    uS=gl.getUniformLocation(prog,"u_s");uM=gl.getUniformLocation(prog,"u_m");
+    uD=gl.getUniformLocation(prog,"u_d"); return true;}
+  var uD=null;
+  var nebOk=initNeb();
+  document.body.setAttribute("data-neb",nebOk?"1":"0");
+  function sizeNeb(){ if(!glOk)return; var s=innerWidth<760?.42:.55;
+    neb.width=Math.max(2,(innerWidth*s)|0); neb.height=Math.max(2,(innerHeight*s)|0); gl.viewport(0,0,neb.width,neb.height);}
+  if(nebOk) sizeNeb(); else document.body.style.background="radial-gradient(120% 90% at 50% 28%,#151030,#04060e)";
+
+  /* ========== LAYER 2 \u2014 crisp full-res starfield + warp streaks ========== */
+  var sc=document.getElementById("stars"), ctx=sc.getContext("2d"), DPR=1, stars=[], shoot=null, shootAt=0;
+  var prevScroll=0, vel=0;
+  function sizeStars(){ DPR=Math.min(devicePixelRatio||1,2); sc.width=(innerWidth*DPR)|0; sc.height=(innerHeight*DPR)|0;
+    ctx.setTransform(DPR,0,0,DPR,0,0); W=innerWidth; H=innerHeight; buildStars(); }
+  function buildStars(){ stars.length=0; var n=Math.min(720,Math.round(W*H/2200));
+    for(var i=0;i<n;i++){ var z=Math.pow(Math.random(),1.7);
+      var hue=Math.random(); var col = hue<.62?"210,225,255" : hue<.86?"150,225,255" : "255,220,190";
+      stars.push({ x:Math.random(), y:Math.random(), z:z, r:(.4+z*1.9)*(Math.random()*.6+.7),
+        a:.35+Math.random()*.6, tw:Math.random()*6.28, ts:.3+Math.random()*1.4, col:col,
+        bright: z>.72 && Math.random()<.5 }); } }
+  function drawStars(t){
+    ctx.clearRect(0,0,W,H); ctx.globalCompositeOperation="lighter";
+    var raw=scrollN-prevScroll; prevScroll=scrollN; vel+=(raw-vel)*0.2;
+    var pmx=(mX-.5);
+    for(var i=0;i<stars.length;i++){ var s=stars[i];
+      var yy = s.y - scrollN*(0.15+s.z*1.35); yy = yy - Math.floor(yy);
+      var px = (s.x + pmx*s.z*0.03); px = px - Math.floor(px);
+      var X=px*W, Y=yy*H;
+      var tw = 0.55 + 0.45*Math.sin(t*s.ts + s.tw);
+      var alpha = s.a*tw;
+      var stretch = Math.min(Math.abs(vel)*H*(0.4+s.z*2.4), 110);
+      if(stretch>2.5){                                   /* WARP: stars streak with scroll speed */
+        var dir = vel>0?-1:1;
+        var g=ctx.createLinearGradient(X,Y,X,Y+dir*stretch);
+        g.addColorStop(0,"rgba("+s.col+","+Math.min(1,alpha*1.25)+")"); g.addColorStop(1,"rgba("+s.col+",0)");
+        ctx.strokeStyle=g; ctx.lineWidth=Math.max(s.r*.9,.6);
+        ctx.beginPath(); ctx.moveTo(X,Y); ctx.lineTo(X,Y+dir*stretch); ctx.stroke();
+      } else {
+        ctx.beginPath(); ctx.fillStyle="rgba("+s.col+","+alpha+")";
+        ctx.arc(X,Y,s.r,0,6.283); ctx.fill();
+        if(s.r>1.3){ var gg=ctx.createRadialGradient(X,Y,0,X,Y,s.r*4);
+          gg.addColorStop(0,"rgba("+s.col+","+(alpha*.45)+")"); gg.addColorStop(1,"rgba(0,0,0,0)");
+          ctx.fillStyle=gg; ctx.beginPath(); ctx.arc(X,Y,s.r*4,0,6.283); ctx.fill(); }
+        if(s.bright){ ctx.strokeStyle="rgba("+s.col+","+(alpha*.5)+")"; ctx.lineWidth=.7;
+          var L=s.r*7; ctx.beginPath(); ctx.moveTo(X-L,Y);ctx.lineTo(X+L,Y); ctx.moveTo(X,Y-L);ctx.lineTo(X,Y+L); ctx.stroke(); }
+      }
+    }
+    if(!shoot && t-shootAt>4 && Math.random()<0.012){
+      shoot={x:Math.random()*W*0.7, y:Math.random()*H*0.4, vx:6+Math.random()*5, vy:2.4+Math.random()*2};
+    }
+    if(shoot){ shoot.x+=shoot.vx*2.4; shoot.y+=shoot.vy*2.4;
+      var tail=90, tx=shoot.x-shoot.vx*tail*.5, ty=shoot.y-shoot.vy*tail*.5;
+      var sg=ctx.createLinearGradient(tx,ty,shoot.x,shoot.y);
+      sg.addColorStop(0,"rgba(46,230,255,0)"); sg.addColorStop(1,"rgba(180,240,255,.9)");
+      ctx.strokeStyle=sg; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(tx,ty); ctx.lineTo(shoot.x,shoot.y); ctx.stroke();
+      ctx.beginPath(); ctx.fillStyle="rgba(220,245,255,.95)"; ctx.arc(shoot.x,shoot.y,1.8,0,6.283); ctx.fill();
+      if(shoot.x>W+120||shoot.y>H+120){ shoot=null; shootAt=t; }
+    }
+    ctx.globalCompositeOperation="source-over";
+  }
+  sizeStars();
+  addEventListener("resize",function(){ if(nebOk)sizeNeb(); sizeStars(); placeNodes(); },{passive:true});
+
+  /* ========== depth instrument ========== */
+  var dPct=document.getElementById("depthPct"), dPip=document.getElementById("depthPip"), dSec=document.getElementById("depthSector");
+  var SECTORS=[["hero","SURFACE"],["verbs","VERB FIELD"],["prove","PROOF"],["moats","THE MOATS"],["get","HOME"]];
+  function updDepth(){ if(!dPct)return;
+    var p=Math.round(scrollN*100); dPct.textContent=(p<10?"0":"")+p; dPip.style.top=(scrollN*146)+"px";
+    var cur="SURFACE";
+    for(var i=0;i<SECTORS.length;i++){ var el=document.getElementById(SECTORS[i][0]);
+      if(el && el.getBoundingClientRect().top < innerHeight*.6) cur=SECTORS[i][1]; }
+    if(dSec.textContent!==cur) dSec.textContent=cur;
+  }
+
+  /* ========== unified loop ========== */
+  var t0=0,last=0;
+  function loop(ts){ requestAnimationFrame(loop);
+    if(!t0)t0=ts; var t=(ts-t0)/1000;
+    if(ts-last<24) return; last=ts;
+    scrollN += (scrollT-scrollN)*0.08; mX+=(tmX-mX)*0.06; mY+=(tmY-mY)*0.06;
+    updDepth();
+    if(reduce||paused) return;
+    /* camera dive: the cosmos deepens + accelerates while THE MOATS fill the view */
+    var dTarget=0;
+    if(moatsEl){ var mr=moatsEl.getBoundingClientRect();
+      if(mr.top<innerHeight*.75 && mr.bottom>innerHeight*.25){
+        var fIn=Math.min(1,(innerHeight*.75-mr.top)/(innerHeight*.5));
+        var fOut=Math.min(1,(mr.bottom-innerHeight*.25)/(innerHeight*.5));
+        dTarget=Math.max(0,Math.min(1,Math.min(fIn,fOut))); } }
+    diveN+=(dTarget-diveN)*0.05;
+    if(nebOk){ gl.uniform2f(uRes,neb.width,neb.height); gl.uniform1f(uT,t);
+      gl.uniform1f(uS,scrollN); gl.uniform2f(uM,mX,mY);
+      if(uD)gl.uniform1f(uD,diveN); gl.drawArrays(gl.TRIANGLES,0,3); }
+    drawStars(t);
+  }
+  var moatsEl=document.getElementById("moats"), diveN=0;
+  requestAnimationFrame(loop);
+
+  /* ========== pause-motion control (WCAG 2.2.2) ========== */
+  var pBtn=document.getElementById("pauseBtn");
+  function applyPause(){ document.body.classList.toggle("paused",paused);
+    if(!pBtn) return;
+    pBtn.setAttribute("aria-pressed",paused?"true":"false");
+    pBtn.textContent=paused?"Resume motion":"Pause motion"; }
+  applyPause();
+  if(pBtn) pBtn.addEventListener("click",function(){ paused=!paused; applyPause();
+    try{ localStorage.setItem("pcb-motion",paused?"paused":"on"); }catch(e){} });
+
+  /* ========== stardust title assembly ========== */
+  function titleParticles(){
+    function bail(){ document.body.classList.remove("ptx"); }
+    try{
+      if(reduce||paused) return bail();
+      var h1=document.querySelector(".hero h1"); if(!h1) return bail();
+      if(scrollY>innerHeight*.5) return bail();   /* hero off-screen: normal reveal */
+      var words=[];
+      var walker=document.createTreeWalker(h1,NodeFilter.SHOW_TEXT,null);
+      var tn;
+      while((tn=walker.nextNode())){
+        var txt=tn.textContent;
+        if(!txt.matchAll) return bail();
+        var ms=Array.from(txt.matchAll(/\S+/g));
+        for(var k=0;k<ms.length;k++){ var m=ms[k];
+          var rg=document.createRange(); rg.setStart(tn,m.index); rg.setEnd(tn,m.index+m[0].length);
+          var rc=rg.getBoundingClientRect();
+          if(rc.width>0 && rc.top<innerHeight) words.push({t:m[0],x:rc.left,y:rc.top,h:rc.height});
+        }
+      }
+      if(!words.length) return bail();
+      var cs=getComputedStyle(h1), fs=parseFloat(cs.fontSize);
+      var off=document.createElement("canvas"); off.width=innerWidth; off.height=innerHeight;
+      var oc=off.getContext("2d",{willReadFrequently:true});
+      oc.fillStyle="#fff"; oc.textBaseline="top";
+      oc.font=cs.fontWeight+" "+fs+"px "+cs.fontFamily;
+      try{ oc.letterSpacing=cs.letterSpacing; }catch(e){}
+      for(var w=0;w<words.length;w++) oc.fillText(words[w].t,words[w].x,words[w].y+(words[w].h-fs)*.5);
+      var data=oc.getImageData(0,0,off.width,off.height).data;
+      var pts=[], step=Math.max(4,Math.round(fs/15));
+      for(var y=0;y<off.height;y+=step) for(var x=0;x<off.width;x+=step){
+        if(data[(y*off.width+x)*4+3]>128) pts.push([x,y]); }
+      if(pts.length<40) return bail();
+      if(pts.length>880){ var keep=[], stride=pts.length/880;
+        for(var i=0;i<880;i++) keep.push(pts[(i*stride)|0]); pts=keep; }
+      var cv=document.createElement("canvas"); cv.className="ptxcv"; cv.setAttribute("aria-hidden","true");
+      cv.width=innerWidth; cv.height=innerHeight;
+      document.body.appendChild(cv); document.body.setAttribute("data-ptx","run");
+      var cc=cv.getContext("2d");
+      var R=Math.max(innerWidth,innerHeight);
+      var parts=pts.map(function(p){ var a=Math.random()*6.283, rr=R*(.55+Math.random()*.55);
+        var pick=Math.random();
+        return {tx:p[0],ty:p[1],x:p[0]+Math.cos(a)*rr,y:p[1]+Math.sin(a)*rr,
+          d:Math.random()*.35,
+          c:pick<.6?"215,232,255":(pick<.82?"46,230,255":"184,146,255")}; });
+      var T0=null, DUR=1500;
+      function ease(u){ return u<.5 ? 4*u*u*u : 1-Math.pow(-2*u+2,3)/2; }
+      function pframe(ts){
+        if(paused){ cv.remove(); return; }
+        if(!T0)T0=ts; var u=(ts-T0)/DUR;
+        cc.clearRect(0,0,cv.width,cv.height); cc.globalCompositeOperation="lighter";
+        var done=true;
+        for(var i=0;i<parts.length;i++){ var p=parts[i];
+          var lu=Math.min(1,Math.max(0,(u-p.d)/(1-p.d))); if(lu<1)done=false;
+          var e=ease(lu), X=p.x+(p.tx-p.x)*e, Y=p.y+(p.ty-p.y)*e;
+          cc.fillStyle="rgba("+p.c+","+(.25+.75*e)+")";
+          cc.fillRect(X,Y,1.7,1.7); }
+        if(!done && u<1.4) requestAnimationFrame(pframe);
+        else { cv.style.transition="opacity .6s"; cv.style.opacity="0";
+          setTimeout(function(){ cv.remove(); },700); }
+      }
+      requestAnimationFrame(pframe);
+    }catch(e){ bail(); var stray=document.querySelector(".ptxcv"); if(stray) stray.remove(); }
+  }
+
+  /* ========== reveals ========== */
+  requestAnimationFrame(function(){ document.getElementById("hero").classList.add("in"); });
+  if(!reduce && !paused){
+    document.body.classList.add("ptx");
+    var ptxStarted=false;
+    var ptxGo=function(){ if(ptxStarted)return; ptxStarted=true; titleParticles(); };
+    if(document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ setTimeout(ptxGo,120); });
+    setTimeout(ptxGo,900);
+  }
+  var io=null;
+  if("IntersectionObserver" in window){
+    io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}});},{threshold:.16});
+    document.querySelectorAll(".reveal").forEach(function(el){io.observe(el);});
+  } else document.querySelectorAll(".reveal").forEach(function(el){el.classList.add("in");});
+
+  /* ========== 539 count-up ========== */
+  var vEl=document.getElementById("verbnum"), vDone=false;
+  function countUp(el,target,dur){ var c0=null;
+    function tick(ts){ if(!c0)c0=ts; var p=Math.min(1,(ts-c0)/dur);
+      var e=1-Math.pow(1-p,4); el.textContent=Math.round(target*e);
+      if(p<1) requestAnimationFrame(tick);
+      else el.classList.add("landed"); }
+    requestAnimationFrame(tick); }
+  if(vEl){
+    if(reduce||!("IntersectionObserver" in window)){ vEl.textContent="539"; }
+    else { var vio=new IntersectionObserver(function(es){ es.forEach(function(e){
+        if(e.isIntersecting&&!vDone){ vDone=true; countUp(vEl,539,1900); vio.disconnect(); } }); },{threshold:.4});
+      vio.observe(vEl); }
+  }
+
+  /* ========== capability constellation ========== */
+  var DOMAINS=[
+    {n:"System & network",c:107,x:.50,y:.16,ex:"net.ping \u00B7 net.firewall.add_rule \u00B7 system.gpu_info \u00B7 power.shutdown \u00B7 proc.kill"},
+    {n:"Media & 3D",c:78,x:.22,y:.26,ex:"image.generate \u00B7 image.inpaint \u00B7 video.generate \u00B7 video.extract_frames \u00B7 blender.render"},
+    {n:"Email \u00B7 SMS \u00B7 calendar",c:44,x:.76,y:.30,ex:"email.send \u00B7 sms.send \u00B7 calendar.schedule_meeting \u00B7 chat.send_message \u00B7 contact.search"},
+    {n:"Apps & windows",c:44,x:.10,y:.52,ex:"app.launch \u00B7 app.focus \u00B7 app.close \u00B7 window.list \u00B7 app.is_running"},
+    {n:"Files & content",c:42,x:.36,y:.44,ex:"fs.read_text \u00B7 fs.write_json \u00B7 fs.encrypt \u00B7 fs.diff \u00B7 fs.restore_from_trash"},
+    {n:"Smart home & IoT",c:38,x:.63,y:.50,ex:"home.set_light \u00B7 home.lock_door \u00B7 iot.mqtt_publish \u00B7 iot.zigbee_discover \u00B7 print.print_file"},
+    {n:"AI \u00B7 search \u00B7 finance",c:36,x:.89,y:.54,ex:"ai.chat \u00B7 ai.embed \u00B7 search.local_docs \u00B7 finance.invoice_create \u00B7 cloud.sync"},
+    {n:"Documents & knowledge",c:30,x:.25,y:.68,ex:"doc.read_pdf \u00B7 doc.create_docx \u00B7 doc.merge_pdfs \u00B7 doc.encrypt_pdf \u00B7 doc.find_in_document"},
+    {n:"Screen sense & input",c:26,x:.50,y:.66,ex:"screen.ocr \u00B7 screen.find_text \u00B7 input.click \u00B7 overlay.annotate \u00B7 screen.record_start"},
+    {n:"Web & browser",c:26,x:.74,y:.72,ex:"web.search \u00B7 web.scrape_text \u00B7 web.screenshot \u00B7 browser.open_url"},
+    {n:"Persona & co-pilot",c:26,x:.13,y:.86,ex:"persona.set_mode \u00B7 persona.set_voice_tone \u00B7 copilot.start_tutorial \u00B7 copilot.show_hint"},
+    {n:"Code & dev",c:22,x:.42,y:.88,ex:"code.run_python \u00B7 code.run_node \u00B7 code.test \u00B7 code.lint \u00B7 code.format"},
+    {n:"Voice & speech",c:20,x:.68,y:.90,ex:"voice.transcribe \u00B7 voice.speak_as \u00B7 voice.wake_word_set \u00B7 voice.memo_create"}
+  ];
+  var LINKS=[[0,1],[0,2],[1,3],[1,4],[4,5],[5,2],[5,6],[3,7],[7,8],[8,9],[9,6],[7,10],[10,11],[11,12],[12,9],[4,8],[2,6]];
+  var cwrap=document.getElementById("constellation"), csvg=document.getElementById("clines"),
+      cdT=document.getElementById("cdT"), cdB=document.getElementById("cdB");
+  function placeNodes(){
+    if(!cwrap) return;
+    var mobile = innerWidth<760;
+    cwrap.querySelectorAll(".cnode").forEach(function(n){ n.remove(); });
+    DOMAINS.forEach(function(d,i){
+      var b=document.createElement("button");
+      b.className="cnode"; b.type="button";
+      b.setAttribute("aria-label",d.n+" \u2014 "+d.c+" verbs");
+      b.innerHTML='<span class="st" aria-hidden="true" style="animation-delay:'+(i*0.23)+'s"></span>'+d.n+' <span class="ct">'+d.c+'</span>';
+      if(!mobile){ b.style.left=(d.x*100)+"%"; b.style.top=(d.y*100)+"%"; }
+      function show(){ cwrap.querySelectorAll(".cnode").forEach(function(n){n.classList.remove("active");});
+        b.classList.add("active"); cdT.textContent=d.n+" \u2014 "+d.c+" verbs";
+        cdB.textContent=d.ex+(d.ex.slice(-1)==="\u2026"?"":" \u2026"); }
+      b.addEventListener("mouseenter",show); b.addEventListener("focus",show); b.addEventListener("click",show);
+      cwrap.appendChild(b);
+    });
+    if(csvg && !mobile){
+      var w=cwrap.clientWidth,h=cwrap.clientHeight,out="";
+      csvg.setAttribute("viewBox","0 0 "+w+" "+h);
+      LINKS.forEach(function(p){ var a=DOMAINS[p[0]],bb=DOMAINS[p[1]]; if(!a||!bb)return;
+        out+='<line x1="'+(a.x*w)+'" y1="'+(a.y*h)+'" x2="'+(bb.x*w)+'" y2="'+(bb.y*h)+'" stroke="rgba(46,230,255,.13)" stroke-width="1"/>'; });
+      csvg.innerHTML=out;
+    } else if(csvg){ csvg.innerHTML=""; }
+  }
+  placeNodes();
+
+  /* ========== PROVE-IT: real in-browser signature ========== */
+  var receiptEl=document.getElementById("receipt"),badge=document.getElementById("badge"),vmsg=document.getElementById("vmsg"),
+      algoEl=document.getElementById("algo"),bV=document.getElementById("btnVerify"),bT=document.getElementById("btnTamper"),bR=document.getElementById("btnReset");
+  var subtle=(crypto&&crypto.subtle)?crypto.subtle:null, kp=null, params="Ed25519", payload=null, sig=null, tampered=false;
+  function b64(b){var u=new Uint8Array(b),s="";for(var i=0;i<u.length;i++)s+=String.fromCharCode(u[i]);return btoa(s).slice(0,44);}
+  function enc(s){return new TextEncoder().encode(s);}
+  function canon(o){return JSON.stringify(o);}
+  function render(){ receiptEl.classList.toggle("tampered",tampered);
+    receiptEl.innerHTML='<span class="k">action</span>   <span class="val">'+payload.action+'</span>\n'+
+      '<span class="k">outcome</span>  <span class="val">'+payload.outcome+'</span>\n'+
+      '<span class="k">at</span>       <span class="val">'+payload.at+'</span>\n'+
+      '<span class="k">signed</span>   <span class="sig">'+b64(sig)+(tampered?' <span aria-hidden="true">\u2190</span> you changed this':'\u2026')+'</span>'; }
+  function setB(k,txt,m){badge.className="badge "+k;badge.textContent=txt;vmsg.textContent=m||"";}
+  async function make(){ payload={action:"declined: delete 41 files in C:\\Users\\you\\Projects",outcome:"refused \u2014 needs your ok",at:"2026-07-03T21:14:09"}; tampered=false;
+    try{ if(!subtle)throw 0;
+      try{kp=await subtle.generateKey({name:"Ed25519"},true,["sign","verify"]);params="Ed25519";algoEl.textContent="Ed25519 \u00B7 in-browser";}
+      catch(e){kp=await subtle.generateKey({name:"ECDSA",namedCurve:"P-256"},true,["sign","verify"]);params={name:"ECDSA",hash:"SHA-256"};algoEl.textContent="ECDSA P-256 \u00B7 in-browser";}
+      sig=await subtle.sign(params,kp.privateKey,enc(canon(payload)));
+    }catch(err){ kp=null; algoEl.textContent="integrity check \u00B7 in-browser";
+      sig=subtle?await subtle.digest("SHA-256",enc(canon(payload))):enc(canon(payload)); }
+    render(); setB("idle","awaiting your check",""); bR.disabled=true; bV.disabled=false; bT.disabled=false; }
+  async function verify(){ var ok;
+    if(kp&&subtle) ok=await subtle.verify(params,kp.publicKey,sig,enc(canon(payload)));
+    else { var hh=subtle?await subtle.digest("SHA-256",enc(canon(payload))):enc(canon(payload)); ok=b64(hh)===b64(sig); }
+    ok?setB("ok","\u2713 signature valid","this action is provably real \u2014 signed, unaltered")
+      :setB("bad","\u2717 signature invalid","tampered \u2014 the proof rejects it"); }
+  function tamper(){ tampered=true; payload.action=payload.action.replace("41 files","9,000 files"); render();
+    setB("idle","content changed \u2014 now verify","one byte moved"); bR.disabled=false; }
+  bV.addEventListener("click",verify); bT.addEventListener("click",tamper); bR.addEventListener("click",make); make();
+})();
+</script>
+
 </body>
 </html>
