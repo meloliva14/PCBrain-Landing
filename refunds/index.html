@@ -35,9 +35,10 @@ footer a{color:var(--cyan);font-size:12px}
 .highlight-box{background:rgba(0,212,255,.06);border:1px solid var(--border);border-radius:10px;padding:20px 24px;margin:20px 0 28px}
 .highlight-box p{margin-bottom:8px}
 .highlight-box p:last-child{margin-bottom:0}
-</style>
+.skip-link{position:absolute;left:-9999px;top:8px;background:#00d4ff;color:#000;padding:8px 16px;border-radius:6px;z-index:1000;font-weight:700}.skip-link:focus{left:8px}</style>
 </head>
 <body>
+<a href="#main" class="skip-link">Skip to main content</a>
   <nav class="nav">
     <a href="/" class="nav-brand">PC Brain</a>
     <div class="nav-links">
@@ -48,7 +49,7 @@ footer a{color:var(--cyan);font-size:12px}
       <a href="/">Home</a>
     </div>
   </nav>
-  <div class="container">
+  <main class="container" id="main">
     <h1>Refund &amp; Cancellation Policy</h1>
     <div class="subtitle">Effective April 15, 2026 | PC Brain LLC | pcbrain.ai/refunds</div>
       <h2>1. 30-Day Money-Back Guarantee</h2>
@@ -77,13 +78,13 @@ footer a{color:var(--cyan);font-size:12px}
       <p>Early Access licenses are subject to the same 30-day refund policy. Early Access pricing reflects the stage of the product &mdash; you are getting the full software at a discount in exchange for being an early adopter. Refunds are still honored within 30 days.</p>
 
       <h2>5. What Happens to Your License After a Refund</h2>
-      <p>When a refund is processed, your license key will be deactivated within 1 business day. The Software will continue to function locally until the next time it contacts api.pcbrain.ai for validation (every 4 hours). After deactivation is confirmed, the Software will enter an unlicensed state.</p>
+      <p>When a refund is processed, your license key is revoked on our side within 1 business day, so it can no longer be used to activate the Software on a new machine. PC Brain runs entirely on your computer and does not phone home to re-validate an install that is already running, so an already-installed copy is not disabled remotely. After a refund, please stop using and uninstall the Software &mdash; continued use after a refund is not licensed.</p>
 
       <h2>6. Cancellation</h2>
       <p>PC Brain is currently sold as a one-time license &mdash; there is no recurring subscription to cancel. If a subscription model is introduced in a future version, this policy will be updated with clear cancellation terms at least 30 days before any recurring billing begins.</p>
 
       <h2>7. Chargebacks</h2>
-      <p>We ask that you contact us at <a href="mailto:melo@pcbrain.ai">melo@pcbrain.ai</a> before filing a chargeback with your bank or payment provider. We will resolve legitimate issues faster than the chargeback process, and filing a chargeback on a transaction we would have refunded voluntarily may result in your license being permanently deactivated.</p>
+      <p>We ask that you contact us at <a href="mailto:melo@pcbrain.ai">melo@pcbrain.ai</a> before filing a chargeback with your bank or payment provider. We will resolve legitimate issues faster than the chargeback process, and filing a chargeback on a transaction we would have refunded voluntarily may result in your license key being permanently revoked.</p>
 
       <h2>8. Contact</h2>
       <p>For any refund or billing question:</p>
@@ -91,7 +92,7 @@ footer a{color:var(--cyan);font-size:12px}
       <p><a href="mailto:melo@pcbrain.ai">melo@pcbrain.ai</a></p>
       <p><a href="https://pcbrain.ai">https://pcbrain.ai</a></p>
       <p>We typically respond within 24 hours.</p>
-  </div>
+  </main>
   <footer>
     <p>&copy; 2026 PC Brain LLC, New Jersey. All rights reserved.</p>
     <p><a href="/">Home</a> &middot; <a href="/privacy">Privacy Policy</a> &middot; <a href="/eula">EULA</a> &middot; <a href="/terms">Terms</a> &middot; <a href="/refunds">Refunds</a></p>

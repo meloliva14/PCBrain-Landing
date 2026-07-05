@@ -29,9 +29,10 @@ p{font-size:15px;color:rgba(232,234,246,.82);margin-bottom:14px}
 footer{text-align:center;padding:40px 24px;color:rgba(107,114,128,.5);font-size:12px;border-top:1px solid var(--border);margin-top:60px}
 footer a{color:var(--cyan);font-size:12px}
 @media(max-width:600px){.container{padding:80px 16px 60px}h1{font-size:26px}h2{font-size:18px}.nav{padding:0 16px}}
-</style>
+.skip-link{position:absolute;left:-9999px;top:8px;background:#00d4ff;color:#000;padding:8px 16px;border-radius:6px;z-index:1000;font-weight:700}.skip-link:focus{left:8px}</style>
 </head>
 <body>
+<a href="#main" class="skip-link">Skip to main content</a>
   <nav class="nav">
     <a href="/" class="nav-brand">PC Brain</a>
     <div class="nav-links">
@@ -42,7 +43,7 @@ footer a{color:var(--cyan);font-size:12px}
       <a href="/">Home</a>
     </div>
   </nav>
-  <div class="container">
+  <main class="container" id="main">
     <h1>Privacy Policy</h1>
     <div class="subtitle">Effective April 15, 2026 | PC Brain LLC, New Jersey</div>
       <p>PC BRAIN PRIVACY POLICY</p>
@@ -82,10 +83,12 @@ footer a{color:var(--cyan);font-size:12px}
       <h2>7. SECURITY</h2>
       <p>We use industry-standard security practices to protect data transmitted to our servers. Your license key is transmitted over HTTPS. Machine fingerprints are one-way hashed and cannot be reversed to identify your hardware. However, no method of transmission over the internet is 100% secure.</p>
       <h2>8. YOUR RIGHTS</h2>
-      <p>You may contact us at any time to:</p>
+      <p>Your local data is yours and stays under your direct control. Because your goals, tasks, memories, chat history, configuration, and other personal data are stored only on your own device (in brain.db and your configuration files), you can access and export this data directly by copying those files, and you can permanently delete it at any time — uninstalling the Software offers to erase all of it from your machine. Inside the Software, Settings &rarr; Data &amp; Privacy also lets you download a complete copy of all your personal data as a portable archive, or erase it on demand, without uninstalling.</p>
+      <p>For the limited data tied to your license that reaches our servers, you may contact us at any time to:</p>
       <p>Request information about what data we hold related to your license.</p>
       <p>Request deletion of your activation record (note: this will deactivate your license).</p>
       <p>Disable telemetry at any time by setting TELEMETRY_ENABLED=false in your .env file.</p>
+      <p>We respond to verified requests within 30 days.</p>
       <h2>9. CHANGES TO THIS POLICY</h2>
       <p>We may update this Privacy Policy from time to time. We will notify you of material changes through the Software's update mechanism or via the email address associated with your license purchase. Continued use of the Software after changes constitutes acceptance of the revised policy.</p>
       <h2>10. CONTACT US</h2>
@@ -93,7 +96,10 @@ footer a{color:var(--cyan);font-size:12px}
       <p>PC BRAIN LLC</p>
       <p>melo@pcbrain.ai</p>
       <p>https://pcbrain.ai</p>
-  </div>
+      <h2>11. ACCESSIBILITY</h2>
+      <p>PC Brain is committed to digital accessibility for people with disabilities. We aim to conform to the Web Content Accessibility Guidelines (WCAG) 2.1 Level AA, and we continue to improve the experience for everyone. Our interfaces support keyboard navigation, screen-reader labelling, reduced-motion preferences, and text resizing.</p>
+      <p>If you encounter any accessibility barrier, or need information in an alternative format, contact us at melo@pcbrain.ai and we will work to provide the information or resolve the issue promptly.</p>
+  </main>
   <footer>
     <p>&copy; 2026 PC Brain LLC, New Jersey. All rights reserved.</p>
     <p><a href="/">Home</a> &middot; <a href="/privacy">Privacy Policy</a> &middot; <a href="/eula">EULA</a> &middot; <a href="/terms">Terms</a> &middot; <a href="/refunds">Refunds</a></p>
