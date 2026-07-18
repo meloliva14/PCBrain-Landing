@@ -1,0 +1,10 @@
+# pcbrain.ai — crawl policy
+# The public landing is fully crawlable. The only exclusion is the
+# form-confirmation page, which is a dead end for searchers (they'd
+# land on "you're on the list" without ever seeing the product).
+
+User-agent: *
+Allow: /
+Disallow: /thanks.html
+
+Sitemap: https://pcbrain.ai/sitemap.xml
